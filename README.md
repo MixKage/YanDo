@@ -1,16 +1,32 @@
-# yando
+# YanDo
 
-A new Flutter project.
+YanDo - инновационное приложение, которое станет вашим незаменимым помощником в организации и повышении производительности вашей жизни!
 
-## Getting Started
+С YanDo вы можете превратить хаос в порядок, легко управлять своими задачами и достигать новых вершин в достижении своих целей. Это мощный инструмент, разработанный с учетом всех ваших потребностей, чтобы вы могли сосредоточиться на самом важном.
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+| <img src=github_images/home_page.png width="300" /> |
+| <img src=github_images/edit_task.png width="300" /> |
+| <img src=github_images/time_data_picker.png width="300" /> |
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Возможности
+
+✅ Возможность добавить задачу используя ElevatedButton
+✅ Возможность быстро добавить задачу просто написав её название
+✅ Возможность закрыть задачу нажав на ComboBox
+✅ Возможность изменять параметры задачи в окне редактирования задач
+✅ Возможность устанавливать временное ограничение используя DatePicker
+✅ Возможность держать под контролем все свои дела
+
+## Библиотеки
+
+В создании YanDo использовались такие библиотеки как:
+* Provider
+* Logger
+* flutter_launcher_icons
+* hive_flutter
+
+## Скачать последний релиз
+
+https://github.com/MixKage/YanDo/releases/download/first_demo/app-release.apk
