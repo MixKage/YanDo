@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:yando/pages/home_page.dart';
-import 'package:yando/pages/task_page.dart';
+import 'package:yando/logger/logger.dart';
+import 'package:yando/pages/home/home_page.dart';
+import 'package:yando/pages/task/task_page.dart';
 import 'package:yando/pages/unknow_page.dart';
 
 enum NavigationPaths {
@@ -27,16 +28,17 @@ class NavigationService {
   }
 
   final routes = <String, WidgetBuilder>{
-    '/': (BuildContext context) => const HomePage(),
-    '/task': (BuildContext context) => const TaskPage(),
+    NavigationPaths.home.path: (BuildContext context) => const HomePage(),
+    NavigationPaths.task.path: (BuildContext context) => const TaskPage(),
   };
 
   String get initialRoute => '/';
 
-  Future<void> pushNamed(NavigationPaths pathEnum) async {
+  Future<void> pushNamed(NavigationPaths pathEnum, [Object? anything]) async {
+    MyLogger.instance.mes('Set ${pathEnum.path} page with params: $anything');
     await _globalKey.currentState?.push(
       PageRouteBuilder(
-        settings: RouteSettings(name: pathEnum.path),
+        settings: RouteSettings(name: pathEnum.path, arguments: anything),
         pageBuilder: (
           BuildContext context,
           Animation<double> animation,

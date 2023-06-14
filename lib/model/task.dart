@@ -1,0 +1,26 @@
+class TaskModel {
+  String type;
+  bool isChecked;
+  String text;
+  DateTime? dateTime;
+
+  TaskModel({
+    required this.type,
+    required this.isChecked,
+    required this.text,
+    required this.dateTime,
+  });
+
+  TaskModel.fromJson(Map<dynamic, dynamic> json)
+      : type = json['type'],
+        isChecked = json['isChecked'],
+        text = json['text'],
+        dateTime = json['dateTime'];
+
+  Map<dynamic, dynamic> toJson() => {
+        'type': type,
+        'isChecked': isChecked,
+        'text': text,
+        'dateTime': dateTime,
+      };
+}
