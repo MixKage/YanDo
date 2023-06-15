@@ -1,21 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 class DeleteButton extends StatelessWidget {
-  const DeleteButton({required this.id, required this.context, super.key});
+  const DeleteButton({required this.func, super.key});
 
-  final BuildContext context;
-  final int id;
-
-  void _deleteTask() {
-    final box = Hive.box('yando_tasks');
-    box.deleteAt(id);
-    Navigator.of(context).pop();
-  }
+  final void Function() func;
 
   @override
   Widget build(BuildContext context) => InkWell(
-        onTap: _deleteTask,
+        onTap: func,
         borderRadius: BorderRadius.circular(8),
         child: Padding(
           padding: const EdgeInsets.all(8.0),

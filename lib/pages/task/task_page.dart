@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:yando/database/locale_data.dart';
 import 'package:yando/logger/logger.dart';
 import 'package:yando/model/task.dart';
+import 'package:yando/pages/task/widgets/delete_button.dart';
 import 'package:yando/pages/task/widgets/time_picker.dart';
 
 class TaskPage extends StatefulWidget {
@@ -71,6 +72,11 @@ class _TaskPageState extends State<TaskPage> {
       _dateTime = picked;
     }
     return _dateTime ?? DateTime.now();
+  }
+
+  void deleteTask() {
+    LocaleData.instance.removeTaskByid(_idTask);
+    Navigator.pop(context);
   }
 
   @override
@@ -179,7 +185,9 @@ class _TaskPageState extends State<TaskPage> {
               const SizedBox(height: 22),
               const Divider(color: Colors.grey),
               const SizedBox(height: 14),
-              // DeleteButton(id: _idTask, context: context),
+              widget.taskId == null
+                  ? const SizedBox()
+                  : DeleteButton(func: () {}),
             ],
           ),
         ),

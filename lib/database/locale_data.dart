@@ -25,15 +25,21 @@ class LocaleData {
   }
 
   void updateTask(int index, TaskModel taskModel) {
-    MyLogger.instance.mes('Update Task'
+    MyLogger.instance.mes('Update Task '
         '$index ${taskModel.toJson()}');
     _box.putAt(index, taskModel.toJson());
   }
 
   TaskModel getTaskById(int index) {
-    MyLogger.instance.mes('Get Task by id'
+    MyLogger.instance.mes('Get Task by id '
         '$index');
     return TaskModel.fromJson(_box.getAt(index));
+  }
+
+  void removeTaskByid(int index) {
+    MyLogger.instance.mes('Removed task by id '
+        '$index');
+    _box.deleteAt(index);
   }
 
   void deleteAll() {
