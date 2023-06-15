@@ -7,10 +7,8 @@ YanDo - инновационное приложение, которое стан
 С YanDo вы можете превратить хаос в порядок, легко управлять своими задачами и достигать новых вершин в достижении своих целей. Это мощный инструмент, разработанный с учетом всех ваших потребностей, чтобы вы могли сосредоточиться на самом важном.
 
 
-| <img src=github_images/home_page.png width="300" /> |
-| <img src=github_images/edit_task.png width="300" /> |
-| <img src=github_images/time_data_picker.png width="300" /> |
-
+| <img src=github_images/home_page.png width="300" /> | <img src=github_images/edit_task.png width="300" /> | <img src=github_images/time_data_picker.png width="300" /> |
+| --- | --- | --- |
 
 ## Возможности
 
