@@ -5,6 +5,7 @@ class AppTheme {
   static ThemeData theme([isDark = true]) => ThemeData(
         textTheme: _textTheme(isDark),
         brightness: isDark ? Brightness.dark : Brightness.light,
+        cardColor: isDark ? const Color(0xFF252528) : null,
         primaryColor:
             isDark ? const Color(0xFF0A84FF) : const Color(0xFF007AFF),
         floatingActionButtonTheme: FloatingActionButtonThemeData(

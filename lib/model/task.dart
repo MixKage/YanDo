@@ -11,6 +11,12 @@ class TaskModel {
     required this.dateTime,
   });
 
+  TaskModel.defaultTask()
+      : type = 'Нет',
+        isChecked = false,
+        text = '',
+        dateTime = null;
+
   TaskModel.fromJson(Map<dynamic, dynamic> json)
       : type = json['type'],
         isChecked = json['isChecked'],

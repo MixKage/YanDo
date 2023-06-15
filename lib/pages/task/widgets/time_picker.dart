@@ -1,136 +1,130 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:yando/model/task.dart';
 
 class TimePicker extends StatefulWidget {
-  const TimePicker({required this.id, super.key});
+  const TimePicker(
+      {required this.selectData,
+      required this.offData,
+      required this.dateTime,
+      super.key});
 
-  final int id;
+  final Future<DateTime> Function() selectData;
+  final void Function() offData;
+  final DateTime? dateTime;
 
   @override
-  // ignore: no_logic_in_create_state
-  State<TimePicker> createState() => _TimePickerState(id);
+  State<TimePicker> createState() => _TimePickerState();
 }
 
 class _TimePickerState extends State<TimePicker> {
   bool dateTimeOn = false;
-  final int id;
-  late Box box;
   DateTime selectedDate = DateTime.now();
-
-  _TimePickerState(this.id);
 
   @override
   void initState() {
-    box = Hive.box('yando_tasks');
+    dateTimeOn = widget.dateTime != null;
+    selectedDate = widget.dateTime ?? DateTime.now();
     super.initState();
   }
 
   String getMonth({required int index}) {
     switch (index) {
-      case 0:
-        return 'января';
       case 1:
-        return 'февраля';
+        return 'января';
       case 2:
-        return 'марта';
+        return 'февраля';
       case 3:
-        return 'апреля';
+        return 'марта';
       case 4:
-        return 'мая';
+        return 'апреля';
       case 5:
-        return 'июня';
+        return 'мая';
       case 6:
-        return 'июля';
+        return 'июня';
       case 7:
-        return 'августа';
+        return 'июля';
       case 8:
-        return 'сентября';
+        return 'августа';
       case 9:
-        return 'октября';
+        return 'сентября';
       case 10:
-        return 'ноября';
+        return 'октября';
       case 11:
+        return 'ноября';
+      case 12:
         return 'декабря';
       default:
         return '';
     }
   }
 
-  void initWidgets() {
-    box = Hive.box('yando_tasks');
-    final taskModel = TaskModel.fromJson(box.getAt(id));
-    dateTimeOn = taskModel.dateTime != null;
-  }
-
-  void saveInfo() {
-    final taskModel = TaskModel.fromJson(box.getAt(id));
-    if (!dateTimeOn) {
-      taskModel.dateTime = null;
-    } else {
-      taskModel.dateTime = selectedDate;
-    }
-    box.putAt(id, taskModel.toJson());
-  }
-
-  Future<void> _selectDate() async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime(2015, 8),
-      lastDate: DateTime(2101),
-    );
-    if (picked != null && picked != selectedDate) {
-      selectedDate = picked;
-      final box = Hive.box('yando_tasks');
-      final taskModel = TaskModel.fromJson(box.getAt(id));
-      taskModel.dateTime = picked;
-      box.putAt(id, taskModel.toJson());
-      setState(() {});
-    }
-  }
+  // void saveInfo() {
+  //   final taskModel = TaskModel.fromJson(box.getAt(id));
+  //   if (!dateTimeOn) {
+  //     taskModel.dateTime = null;
+  //   } else {
+  //     taskModel.dateTime = selectedDate;
+  //   }
+  //   box.putAt(id, taskModel.toJson());
+  // }
+  //
+  // Future<void> _selectDate() async {
+  //   final DateTime? picked = await showDatePicker(
+  //     context: context,
+  //     initialDate: selectedDate,
+  //     firstDate: DateTime(2015, 8),
+  //     lastDate: DateTime(2101),
+  //   );
+  //   if (picked != null && picked != selectedDate) {
+  //     selectedDate = picked;
+  //     final box = Hive.box('yando_tasks');
+  //     final taskModel = TaskModel.fromJson(box.getAt(id));
+  //     taskModel.dateTime = picked;
+  //     box.putAt(id, taskModel.toJson());
+  //     setState(() {});
+  //   }
+  // }
 
   @override
-  Widget build(BuildContext context) {
-    initWidgets();
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Сделать до',
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-            if (dateTimeOn)
-              InkWell(
-                onTap: _selectDate,
-                borderRadius: BorderRadius.circular(8),
-                child: Text(
-                  '${selectedDate.day} '
-                  '${getMonth(index: selectedDate.month)}'
-                  ' ${selectedDate.year}',
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontSize: 16,
+  Widget build(BuildContext context) => Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Сделать до',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+              if (dateTimeOn)
+                InkWell(
+                  onTap: () async {
+                    selectedDate = await widget.selectData();
+                    setState(() {});
+                  },
+                  borderRadius: BorderRadius.circular(8),
+                  child: Text(
+                    '${selectedDate.day} '
+                    '${getMonth(index: selectedDate.month)}'
+                    ' ${selectedDate.year}',
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontSize: 16,
+                    ),
                   ),
-                ),
-              )
-            else
-              const SizedBox(height: 18),
-          ],
-        ),
-        Switch(
-          value: dateTimeOn,
-          onChanged: (value) {
-            dateTimeOn = value;
-            saveInfo();
-            setState(() {});
-          },
-        ),
-      ],
-    );
-  }
+                )
+              else
+                const SizedBox(height: 18),
+            ],
+          ),
+          Switch(
+            value: dateTimeOn,
+            onChanged: (value) {
+              widget.offData();
+              dateTimeOn = value;
+              setState(() {});
+            },
+          ),
+        ],
+      );
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:yando/database/locale_data.dart';
 import 'package:yando/model/count_close_tasks.dart';
 import 'package:yando/model/task.dart';
 import 'package:yando/navigation/nav_service.dart';
@@ -17,7 +18,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late ScrollController _scrollController;
-  int countCompleteTask = 0;
   bool visible = false;
 
   @override
@@ -32,25 +32,18 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  void deleteAll() {
-    final box = Hive.box('yando_tasks');
-    // ignore: cascade_invocations
-    box.clear();
-  }
-
   void createTask({
     required String type,
     required bool isChecked,
     required String text,
   }) {
-    final box = Hive.box('yando_tasks');
     final newTask = TaskModel(
       type: type,
       isChecked: isChecked,
       text: text,
       dateTime: null,
-    ).toJson();
-    box.add(newTask);
+    );
+    LocaleData.instance.addTask(newTask);
   }
 
   @override
@@ -66,7 +59,8 @@ class _HomePageState extends State<HomePage> {
           slivers: <Widget>[
             SliverPersistentHeader(
               delegate: HomeAppBarDelegate(
-                changeVisibility: deleteAll,
+                // TODO: CHANGE IT
+                changeVisibility: () {},
                 doneTasksCount:
                     Provider.of<CountCloseTasks>(context).countCloseTask,
                 visibility: false,

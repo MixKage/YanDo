@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:yando/database/locale_data.dart';
 import 'package:yando/logger/logger.dart';
 import 'package:yando/model/task.dart';
-import 'package:yando/pages/task/widgets/delete_button.dart';
 import 'package:yando/pages/task/widgets/time_picker.dart';
 
 class TaskPage extends StatefulWidget {
-  const TaskPage({super.key});
+  const TaskPage({required this.taskId, super.key});
+
+  final int? taskId;
 
   @override
   State<TaskPage> createState() => _TaskPageState();
@@ -15,15 +16,23 @@ class TaskPage extends StatefulWidget {
 class _TaskPageState extends State<TaskPage> {
   final List<String> _type = ['Нет', 'Низкий', '!! Высокий'];
   String _selectedType = 'Нет';
-  late int? _idTask;
-  late Box _box;
+  late final int _idTask;
   late TaskModel _taskModel;
   late TextEditingController _textController;
+  late DateTime? _dateTime;
 
   @override
   void initState() {
-    _box = Hive.box('yando_tasks');
     _textController = TextEditingController();
+    if (widget.taskId == null) {
+      _idTask = LocaleData.instance.length;
+      _taskModel = TaskModel.defaultTask();
+    } else {
+      _idTask = widget.taskId!.toInt();
+      _taskModel = LocaleData.instance.getTaskById(_idTask);
+    }
+    initData();
+    MyLogger.instance.mes(_taskModel.toJson().toString());
     super.initState();
   }
 
@@ -34,35 +43,38 @@ class _TaskPageState extends State<TaskPage> {
   }
 
   void initData() {
-    _idTask = ModalRoute.of(context)?.settings.arguments as int?;
-    MyLogger.instance.mes('Изменение задачи ${_idTask ?? _box.length}');
-    if (_idTask == null) {
-      _idTask = _box.length;
-      _taskModel = TaskModel(
-        type: 'Нет',
-        isChecked: false,
-        text: '',
-        dateTime: null,
-      );
-    } else {
-      _taskModel = TaskModel.fromJson(_box.getAt(_idTask!));
-      _textController.text = _taskModel.text;
-      _selectedType = _taskModel.type;
-    }
+    _selectedType = _taskModel.type;
+    _textController.text = _taskModel.text;
+    _dateTime = _taskModel.dateTime;
   }
 
-  void saveTask({bool isExit = true}) {
-    _taskModel = TaskModel.fromJson(_box.getAt(_idTask!));
-    _taskModel
-      ..type = _selectedType
-      ..text = _textController.text;
-    _box.putAt(_idTask!, _taskModel.toJson());
-    if (isExit) Navigator.of(context).pop();
+  void saveTask() {
+    _taskModel.text = _textController.text;
+    _taskModel.dateTime = _dateTime;
+    _taskModel.type = _selectedType;
+    if (widget.taskId == null) {
+      LocaleData.instance.addTask(_taskModel);
+    } else {
+      LocaleData.instance.updateTask(_idTask, _taskModel);
+    }
+    Navigator.pop(context);
+  }
+
+  Future<DateTime> selectDateTime() async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _dateTime ?? DateTime.now(),
+      firstDate: DateTime(2015, 8),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != _dateTime) {
+      _dateTime = picked;
+    }
+    return _dateTime ?? DateTime.now();
   }
 
   @override
   Widget build(BuildContext context) {
-    initData();
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -125,6 +137,7 @@ class _TaskPageState extends State<TaskPage> {
                   ),
                   DropdownButton(
                     iconSize: 0.0,
+                    underline: const SizedBox(),
                     value: _selectedType,
                     items: _type
                         .map(
@@ -148,7 +161,6 @@ class _TaskPageState extends State<TaskPage> {
                     onChanged: (value) {
                       _selectedType = value.toString();
                       _taskModel.type = _selectedType;
-                      saveTask(isExit: false);
                       setState(() {});
                     },
                   ),
@@ -157,11 +169,17 @@ class _TaskPageState extends State<TaskPage> {
               const SizedBox(height: 22),
               const Divider(color: Colors.grey),
               const SizedBox(height: 22),
-              TimePicker(id: _idTask!),
+              TimePicker(
+                selectData: selectDateTime,
+                offData: () {
+                  _dateTime = null;
+                },
+                dateTime: _dateTime,
+              ),
               const SizedBox(height: 22),
               const Divider(color: Colors.grey),
               const SizedBox(height: 14),
-              DeleteButton(id: _idTask!, context: context),
+              // DeleteButton(id: _idTask, context: context),
             ],
           ),
         ),

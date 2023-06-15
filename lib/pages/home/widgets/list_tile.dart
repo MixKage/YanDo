@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:yando/database/locale_data.dart';
+import 'package:yando/logger/logger.dart';
 import 'package:yando/model/count_close_tasks.dart';
 import 'package:yando/model/task.dart';
 import 'package:yando/navigation/nav_service.dart';
@@ -19,7 +20,6 @@ class MyListTile extends StatefulWidget {
 }
 
 class _MyListTileState extends State<MyListTile> {
-  final box = Hive.box('yando_tasks');
   late TaskModel _taskModel;
   final int index;
 
@@ -27,59 +27,68 @@ class _MyListTileState extends State<MyListTile> {
 
   @override
   void initState() {
-    _taskModel = TaskModel.fromJson(box.getAt(index));
+    _taskModel = LocaleData.instance.getTaskById(index);
     super.initState();
   }
 
   void pressChecked({required bool value}) {
-    _taskModel = TaskModel.fromJson(box.getAt(index));
     _taskModel.isChecked = value;
+
     if (value) {
+      MyLogger.instance.mes('Checked $index task');
       Provider.of<CountCloseTasks>(context, listen: false).plusCloseTask();
     } else {
+      MyLogger.instance.mes('Unchecked $index task');
       Provider.of<CountCloseTasks>(context, listen: false).minusCloseTask();
     }
-    box.putAt(index, _taskModel.toJson());
+    LocaleData.instance.updateTask(index, _taskModel);
   }
 
   void editTask() {
+    MyLogger.instance.mes('Start edite $index task');
     NavigationService.instance.pushNamed(NavigationPaths.task, index);
   }
 
   @override
-  Widget build(BuildContext context) => Row(
-        children: [
-          Checkbox(
-            activeColor: Colors.green,
-            value: _taskModel.isChecked,
-            onChanged: (value) {
-              setState(() {
-                pressChecked(value: value!);
-              });
-            },
-          ),
-          Expanded(
-            child: Text(
-              _taskModel.text,
-              style: _taskModel.isChecked
-                  ? const TextStyle(decoration: TextDecoration.lineThrough)
-                  : null,
+  Widget build(BuildContext context) => Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: Theme.of(context).cardColor,
+        ),
+        child: Row(
+          children: [
+            Checkbox(
+              activeColor: Colors.green,
+              value: _taskModel.isChecked,
+              onChanged: (value) {
+                setState(() {
+                  pressChecked(value: value!);
+                });
+              },
             ),
-          ),
-          Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: editTask,
-              borderRadius: BorderRadius.circular(8),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Icon(
-                  Icons.info_outline,
-                  color: Theme.of(context).secondaryHeaderColor,
+            Expanded(
+              child: Text(
+                _taskModel.text,
+                style: _taskModel.isChecked
+                    ? const TextStyle(decoration: TextDecoration.lineThrough)
+                    : null,
+              ),
+            ),
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: editTask,
+                borderRadius: BorderRadius.circular(8),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(
+                    Icons.info_outline,
+                    color: Theme.of(context).secondaryHeaderColor,
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       );
 }
