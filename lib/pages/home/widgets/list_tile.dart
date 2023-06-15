@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yando/database/locale_data.dart';
 import 'package:yando/logger/logger.dart';
-import 'package:yando/model/count_close_tasks.dart';
 import 'package:yando/model/task.dart';
+import 'package:yando/model/tasks_notifier.dart';
 import 'package:yando/navigation/nav_service.dart';
 
 class MyListTile extends StatefulWidget {
@@ -36,17 +36,17 @@ class _MyListTileState extends State<MyListTile> {
 
     if (value) {
       MyLogger.instance.mes('Checked $index task');
-      Provider.of<CountCloseTasks>(context, listen: false).plusCloseTask();
     } else {
       MyLogger.instance.mes('Unchecked $index task');
-      Provider.of<CountCloseTasks>(context, listen: false).minusCloseTask();
     }
-    LocaleData.instance.updateTask(index, _taskModel);
+    Provider.of<TasksNotifier>(context, listen: false)
+        .updateTask(index, _taskModel);
   }
 
-  void editTask() {
+  Future<void> editTask() async {
     MyLogger.instance.mes('Start edite $index task');
-    NavigationService.instance.pushNamed(NavigationPaths.task, index);
+    await NavigationService.instance.pushNamed(NavigationPaths.task, index);
+    setState(() {});
   }
 
   @override

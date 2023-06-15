@@ -42,6 +42,9 @@ class LocaleData {
     _box.deleteAt(index);
   }
 
+  List<TaskModel> getListTasks() =>
+      _box.values.map((e) => TaskModel.fromJson(e)).toList();
+
   void deleteAll() {
     _box.clear();
   }

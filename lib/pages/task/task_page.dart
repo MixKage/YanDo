@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:yando/database/locale_data.dart';
 import 'package:yando/logger/logger.dart';
 import 'package:yando/model/task.dart';
+import 'package:yando/model/tasks_notifier.dart';
 import 'package:yando/pages/task/widgets/delete_button.dart';
 import 'package:yando/pages/task/widgets/time_picker.dart';
 
@@ -54,9 +56,10 @@ class _TaskPageState extends State<TaskPage> {
     _taskModel.dateTime = _dateTime;
     _taskModel.type = _selectedType;
     if (widget.taskId == null) {
-      LocaleData.instance.addTask(_taskModel);
+      Provider.of<TasksNotifier>(context, listen: false).addTask(_taskModel);
     } else {
-      LocaleData.instance.updateTask(_idTask, _taskModel);
+      Provider.of<TasksNotifier>(context, listen: false)
+          .updateTask(_idTask, _taskModel);
     }
     Navigator.pop(context);
   }
@@ -75,7 +78,7 @@ class _TaskPageState extends State<TaskPage> {
   }
 
   void deleteTask() {
-    LocaleData.instance.removeTaskByid(_idTask);
+    Provider.of<TasksNotifier>(context, listen: false).removeTaskById(_idTask);
     Navigator.pop(context);
   }
 

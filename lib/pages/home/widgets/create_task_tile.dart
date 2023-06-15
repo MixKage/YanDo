@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:yando/database/locale_data.dart';
+import 'package:provider/provider.dart';
 import 'package:yando/logger/logger.dart';
 import 'package:yando/model/task.dart';
+import 'package:yando/model/tasks_notifier.dart';
 
 class CreateTaskTile extends StatefulWidget {
   const CreateTaskTile({super.key});
@@ -15,7 +15,7 @@ class _CreateTaskTileState extends State<CreateTaskTile> {
   void createTask(String text) {
     MyLogger.instance.mes('Create Task $text');
     final newTask = TaskModel.defaultWithTextTask(text);
-    LocaleData.instance.addTask(newTask);
+    Provider.of<TasksNotifier>(context, listen: false).addTask(newTask);
   }
 
   @override

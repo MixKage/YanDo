@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yando/database/locale_data.dart';
-import 'package:yando/model/count_close_tasks.dart';
+import 'package:yando/model/tasks_notifier.dart';
 import 'package:yando/navigation/nav_service.dart';
 import 'package:yando/theme/app_theme.dart';
 
@@ -31,7 +31,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) => MultiProvider(
         providers: [
           ChangeNotifierProvider(
-            create: (context) => CountCloseTasks(),
+            create: (context) => TasksNotifier.fromHive(),
           )
         ],
         child: MaterialApp(

@@ -12,4 +12,9 @@ class CountCloseTasks extends ChangeNotifier {
     countCloseTask--;
     notifyListeners();
   }
+
+  void setCountCloseTask(int count) {
+    countCloseTask = count;
+    notifyListeners();
+  }
 }
