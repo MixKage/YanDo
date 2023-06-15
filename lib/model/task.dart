@@ -17,6 +17,11 @@ class TaskModel {
         text = '',
         dateTime = null;
 
+  TaskModel.defaultWithTextTask(this.text)
+      : type = 'Нет',
+        isChecked = false,
+        dateTime = null;
+
   TaskModel.fromJson(Map<dynamic, dynamic> json)
       : type = json['type'],
         isChecked = json['isChecked'],
