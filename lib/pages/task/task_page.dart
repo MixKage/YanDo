@@ -187,7 +187,7 @@ class _TaskPageState extends State<TaskPage> {
               const SizedBox(height: 14),
               widget.taskId == null
                   ? const SizedBox()
-                  : DeleteButton(func: () {}),
+                  : DeleteButton(func: deleteTask),
             ],
           ),
         ),
