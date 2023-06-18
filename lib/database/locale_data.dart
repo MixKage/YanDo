@@ -10,15 +10,18 @@ class LocaleData {
   factory LocaleData() => instance;
 
   late Box _box;
+  late int _id;
 
   int get length => _box.length;
 
   Future<void> initAsync() async {
     await Hive.initFlutter();
     _box = await Hive.openBox('yando_tasks');
+    _id = _box.length;
   }
 
   void addTask(TaskModel taskModel) {
+    taskModel.id = ++_id;
     MyLogger.instance.mes('Create Task'
         '${taskModel.toJson()}');
     _box.add(taskModel.toJson());
@@ -39,7 +42,7 @@ class LocaleData {
   void removeTaskByid(int index) {
     MyLogger.instance.mes('Removed task by id '
         '$index');
-    _box.deleteAt(index);
+    _box.delete();
   }
 
   List<TaskModel> getListTasks() =>

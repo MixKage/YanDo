@@ -50,7 +50,7 @@ class _MyListTileState extends State<MyListTile> {
   Widget build(BuildContext context) => Dismissible(
         background: Container(color: Colors.green),
         secondaryBackground: Container(color: const Color(0xFFFF3B30)),
-        key: ValueKey<int>(widget.index),
+        key: ValueKey<int>( Provider.of<TasksNotifier>(context).listTasks.),
         onDismissed: (DismissDirection direction) {
           if (direction == DismissDirection.endToStart) {
             _taskModel.isChecked = !_taskModel.isChecked;

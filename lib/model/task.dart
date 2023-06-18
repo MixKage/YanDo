@@ -1,4 +1,5 @@
 class TaskModel {
+  int id = -1;
   String type;
   bool isChecked;
   String text;
@@ -23,12 +24,14 @@ class TaskModel {
         dateTime = null;
 
   TaskModel.fromJson(Map<dynamic, dynamic> json)
-      : type = json['type'],
+      : id = json['id'],
+        type = json['type'],
         isChecked = json['isChecked'],
         text = json['text'],
         dateTime = json['dateTime'];
 
   Map<dynamic, dynamic> toJson() => {
+        'id': id,
         'type': type,
         'isChecked': isChecked,
         'text': text,
