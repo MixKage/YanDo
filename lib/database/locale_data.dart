@@ -2,6 +2,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:yando/logger/logger.dart';
 import 'package:yando/model/task.dart';
 
+// Работа с базой данных
 class LocaleData {
   LocaleData._();
 
