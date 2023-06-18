@@ -32,6 +32,10 @@ YanDo - инновационное приложение, которое стан
 * Logger
 * flutter_launcher_icons
 * hive_flutter
+* 
+## Info
+
+Для следующей домашки будет создан PullRequest
 
 ## Скачать последний релиз
 
