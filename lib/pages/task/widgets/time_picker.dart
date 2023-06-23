@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
 class TimePicker extends StatefulWidget {
-  const TimePicker(
-      {required this.selectData,
-      required this.offData,
-      required this.dateTime,
-      super.key});
+  const TimePicker({
+    required this.selectData,
+    required this.offData,
+    required this.dateTime,
+    super.key,
+  });
 
   final Future<DateTime> Function() selectData;
   final void Function() offData;

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:yando/database/locale_data.dart';
 import 'package:yando/model/task.dart';
 
-class TasksNotifier with ChangeNotifier {
+class TasksNotifier extends ChangeNotifier {
   final List<TaskModel> listTasks;
   List<TaskModel> listCloseTasks = [];
 
@@ -17,14 +17,18 @@ class TasksNotifier with ChangeNotifier {
     notifyListeners();
   }
 
-  void updateTask(int index, TaskModel taskModel) {
-    LocaleData.instance.updateTask(index, taskModel);
+  void updateTask(TaskModel taskModel) {
+    taskModel
+      ..changedAt = DateTime.now()
+      // TODO: CHANGE_IT ON UNIQ ID DEVICE
+      ..lastUpdatedBy = '';
+    final index = LocaleData.instance.updateTask(taskModel);
     listTasks[index] = taskModel;
     notifyListeners();
   }
 
-  void removeTaskById(int index) {
-    LocaleData.instance.removeTaskByid(index);
+  void removeTaskById(int id) {
+    final index = LocaleData.instance.removeTaskById(id);
     listTasks.removeAt(index);
     notifyListeners();
   }

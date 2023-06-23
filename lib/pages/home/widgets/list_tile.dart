@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:yando/database/locale_data.dart';
 import 'package:yando/logger/logger.dart';
 import 'package:yando/model/task.dart';
 import 'package:yando/model/tasks_notifier.dart';
@@ -8,68 +7,60 @@ import 'package:yando/navigation/nav_service.dart';
 
 class MyListTile extends StatefulWidget {
   const MyListTile({
-    required this.index,
+    required this.task,
     super.key,
   });
 
-  final int index;
+  final TaskModel task;
 
   @override
   State<MyListTile> createState() => _MyListTileState();
 }
 
 class _MyListTileState extends State<MyListTile> {
-  late TaskModel _taskModel;
-
   @override
   void initState() {
-    _taskModel = LocaleData.instance.getTaskById(widget.index);
     super.initState();
   }
 
   void pressChecked({required bool value}) {
-    _taskModel.isChecked = value;
+    widget.task.done = value;
 
     if (value) {
-      MyLogger.instance.mes('Checked ${widget.index} task');
+      MyLogger.instance.mes('Checked ${widget.task.id} task');
     } else {
-      MyLogger.instance.mes('Unchecked ${widget.index} task');
+      MyLogger.instance.mes('Unchecked ${widget.task.id} task');
     }
-    Provider.of<TasksNotifier>(context, listen: false)
-        .updateTask(widget.index, _taskModel);
+    Provider.of<TasksNotifier>(context, listen: false).updateTask(widget.task);
   }
 
   Future<void> editTask() async {
-    MyLogger.instance.mes('Start edite ${widget.index} task');
+    MyLogger.instance.mes('Start edite ${widget.task.id} task');
     await NavigationService.instance
-        .pushNamed(NavigationPaths.task, widget.index);
-    setState(() {});
+        .pushNamed(NavigationPaths.task, widget.task);
+    // TODO: CHEK_IT
+    // setState(() {});
   }
 
   @override
   Widget build(BuildContext context) => Dismissible(
         background: Container(color: Colors.green),
         secondaryBackground: Container(color: const Color(0xFFFF3B30)),
-        key: ValueKey<int>( Provider.of<TasksNotifier>(context).listTasks.),
-        onDismissed: (DismissDirection direction) {
-          if (direction == DismissDirection.endToStart) {
-            _taskModel.isChecked = !_taskModel.isChecked;
-            Provider.of<TasksNotifier>(context, listen: false)
-                .updateTask(widget.index, _taskModel);
-          }
-        },
-        onUpdate: (DismissUpdateDetails direction) {
-          if (direction.direction == DismissDirection.startToEnd &&
-              direction.progress > 0.5) {}
-        },
+        key: ValueKey<int>(widget.task.id),
         confirmDismiss: (DismissDirection direction) async {
           if (direction == DismissDirection.startToEnd) {
+            widget.task.done = !widget.task.done;
+            Provider.of<TasksNotifier>(context, listen: false)
+                .updateTask(widget.task);
             return false;
-          } else {
+          } else if (direction == DismissDirection.endToStart) {
+            Provider.of<TasksNotifier>(context, listen: false)
+                .removeTaskById(widget.task.id);
             return true;
           }
+          return null;
         },
-        child: Container(
+        child: DecoratedBox(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
             color: Theme.of(context).cardColor,
@@ -78,38 +69,40 @@ class _MyListTileState extends State<MyListTile> {
             children: [
               Checkbox(
                 activeColor: Colors.green,
-                value: _taskModel.isChecked,
+                value: widget.task.done,
                 onChanged: (value) {
                   setState(() {
                     pressChecked(value: value!);
                   });
                 },
               ),
+              // TODO: CHANGE_IT ON ENUM
               SizedBox(
-                  width: _taskModel.type == '!! Высокий' ||
-                          _taskModel.type == 'Низкий'
-                      ? 20
-                      : 0,
-                  child: _taskModel.type == '!! Высокий'
-                      ? const Text(
-                          '!!',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
-                        )
-                      : _taskModel.type == 'Низкий'
-                          ? const Icon(
-                              Icons.arrow_downward_outlined,
-                              size: 18,
-                            )
-                          : null),
+                width: widget.task.importance == '!! Высокий' ||
+                        widget.task.importance == 'Низкий'
+                    ? 20
+                    : 0,
+                child: widget.task.importance == '!! Высокий'
+                    ? const Text(
+                        '!!',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      )
+                    : widget.task.importance == 'Низкий'
+                        ? const Icon(
+                            Icons.arrow_downward_outlined,
+                            size: 18,
+                          )
+                        : null,
+              ),
               Expanded(
                 child: Text(
-                  _taskModel.text,
-                  style: _taskModel.isChecked
+                  widget.task.text,
+                  style: widget.task.done
                       ? const TextStyle(decoration: TextDecoration.lineThrough)
                       : null,
                 ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:yando/database/locale_data.dart';
 import 'package:yando/model/task.dart';
 import 'package:yando/model/tasks_notifier.dart';
 import 'package:yando/navigation/nav_service.dart';
@@ -19,6 +18,18 @@ class _HomePageState extends State<HomePage> {
   late ScrollController _scrollController;
   bool visible = false;
 
+  Future<void> createNewTask() async {
+    final newTask = TaskModel.defaultTask()..id = -1;
+
+    Provider.of<TasksNotifier>(context, listen: false).addTask(newTask);
+    await NavigationService.instance.pushNamed(
+      NavigationPaths.task,
+      Provider.of<TasksNotifier>(context, listen: false).listTasks[
+          Provider.of<TasksNotifier>(context, listen: false).listTasks.length -
+              1],
+    );
+  }
+
   @override
   void initState() {
     _scrollController = ScrollController();
@@ -31,26 +42,10 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  void createTask({
-    required String type,
-    required bool isChecked,
-    required String text,
-  }) {
-    final newTask = TaskModel(
-      type: type,
-      isChecked: isChecked,
-      text: text,
-      dateTime: null,
-    );
-    LocaleData.instance.addTask(newTask);
-  }
-
   @override
   Widget build(BuildContext context) => Scaffold(
         floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            await NavigationService.instance.pushNamed(NavigationPaths.task);
-          },
+          onPressed: createNewTask,
           child: const Icon(Icons.add),
         ),
         body: CustomScrollView(
@@ -67,29 +62,29 @@ class _HomePageState extends State<HomePage> {
               pinned: true,
             ),
             Consumer<TasksNotifier>(
-              builder: (context, notifier, _) {
-                return SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: Theme.of(context).cardColor,
-                      ),
-                      child: ListView.builder(
-                        padding: EdgeInsets.zero,
-                        shrinkWrap: true,
-                        controller: _scrollController,
-                        itemCount: notifier.listTasks.length + 1,
-                        itemBuilder: (context, index) =>
-                            (index != notifier.listTasks.length)
-                                ? MyListTile(index: index)
-                                : const CreateTaskTile(),
-                      ),
+              builder: (context, notifier, _) => SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Theme.of(context).cardColor,
+                    ),
+                    child: ListView.builder(
+                      padding: EdgeInsets.zero,
+                      shrinkWrap: true,
+                      controller: _scrollController,
+                      itemCount: notifier.listTasks.length + 1,
+                      itemBuilder: (context, index) =>
+                          (index != notifier.listTasks.length)
+                              ? MyListTile(
+                                  task: notifier.listTasks[index],
+                                )
+                              : const CreateTaskTile(),
                     ),
                   ),
-                );
-              },
+                ),
+              ),
             ),
           ],
         ),

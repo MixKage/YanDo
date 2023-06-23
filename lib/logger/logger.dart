@@ -8,11 +8,11 @@ class MyLogger {
 
   factory MyLogger() => instance;
 
-  void mes(String info) {
-    logger.d(info);
+  void mes(Object info) {
+    logger.d(info.toString());
   }
 
-  void err(String info) {
-    logger.e(info);
+  void err(Object info) {
+    logger.e(info.toString());
   }
 }

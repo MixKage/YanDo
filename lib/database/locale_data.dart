@@ -10,39 +10,79 @@ class LocaleData {
   factory LocaleData() => instance;
 
   late Box _box;
-  late int _id;
+  late String deviceId;
+
+  int get newId {
+    // В случае, если список элементов пуст
+    if (_box.length == 0) {
+      return 0;
+    } else {
+      // Новый элемент может быть с отрицательным индексом
+      // (при создании новой таски через floatingActionButton)
+      // Такой элемент может быть только один и обязательно в конце списка
+      if (TaskModel.fromJson(_box.getAt(_box.length - 1)).id == -1) {
+        return TaskModel.fromJson(_box.getAt(_box.length - 2)).id + 1;
+      } else {
+        return TaskModel.fromJson(_box.getAt(_box.length - 1)).id + 1;
+      }
+    }
+  }
 
   int get length => _box.length;
 
   Future<void> initAsync() async {
     await Hive.initFlutter();
     _box = await Hive.openBox('yando_tasks');
-    _id = _box.length;
+    // final deviceInfoPlugin = DeviceInfoPlugin();
+    // final deviceInfo = await deviceInfoPlugin.deviceInfo;
+    // final allInfo = deviceInfo.data;
+    // print(allInfo);
+    deviceId = '';
+    //deviceId = deviceInfo.data;
   }
 
   void addTask(TaskModel taskModel) {
-    taskModel.id = ++_id;
     MyLogger.instance.mes('Create Task'
         '${taskModel.toJson()}');
     _box.add(taskModel.toJson());
   }
 
-  void updateTask(int index, TaskModel taskModel) {
+  int updateTask(TaskModel taskModel) {
     MyLogger.instance.mes('Update Task '
-        '$index ${taskModel.toJson()}');
-    _box.putAt(index, taskModel.toJson());
+        '${taskModel.id} ${taskModel.toJson()}');
+    for (int i = 0; i < length; i++) {
+      if (TaskModel.fromJson(_box.getAt(i)).id == taskModel.id) {
+        _box.put(taskModel.id, taskModel.toJson());
+        return i;
+      }
+    }
+    MyLogger.instance.err('Undefined task by id ${taskModel.id}');
+    throw Exception('Undefined task by id ${taskModel.id}');
   }
 
-  TaskModel getTaskById(int index) {
+  TaskModel getTaskById(int id) {
     MyLogger.instance.mes('Get Task by id '
-        '$index');
-    return TaskModel.fromJson(_box.getAt(index));
+        '$id');
+    for (int i = 0; i < length; i++) {
+      if (TaskModel.fromJson(_box.getAt(i)).id == id) {
+        return TaskModel.fromJson(_box.getAt(i));
+      }
+    }
+    MyLogger.instance.err('Undefined task by id $id');
+    throw Exception('Undefined task by id $id');
   }
 
-  void removeTaskByid(int index) {
+  int removeTaskById(int id) {
     MyLogger.instance.mes('Removed task by id '
-        '$index');
-    _box.delete();
+        '$id');
+    for (int i = 0; i < length; i++) {
+      if (TaskModel.fromJson(_box.getAt(i)).id == id) {
+        _box.deleteAt(i);
+        return i;
+      }
+    }
+    MyLogger.instance.err('Undefined task by id $id');
+    throw Exception('Undefined task by id $id');
   }
 
   List<TaskModel> getListTasks() =>

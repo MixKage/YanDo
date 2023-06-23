@@ -27,6 +27,7 @@ class _CreateTaskTileState extends State<CreateTaskTile> {
           ),
           onSubmitted: (value) {
             if (value.isNotEmpty) createTask(value);
+            MyLogger.instance.mes('Create defaultWithTextTask');
           },
         ),
       );
