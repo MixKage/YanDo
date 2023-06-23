@@ -52,6 +52,14 @@ class _TaskPageState extends State<TaskPage> {
     Navigator.pop(context);
   }
 
+  void unsaveExit() {
+    if (widget.task!.id == -1) {
+      deleteTask();
+    } else {
+      Navigator.of(context).pop();
+    }
+  }
+
   Future<DateTime> selectDateTime() async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -78,7 +86,7 @@ class _TaskPageState extends State<TaskPage> {
           leading: Material(
             color: Colors.transparent,
             child: InkWell(
-              onTap: Navigator.of(context).pop,
+              onTap: unsaveExit,
               borderRadius: BorderRadius.circular(8),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
