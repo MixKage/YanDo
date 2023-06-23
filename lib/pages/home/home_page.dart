@@ -55,7 +55,7 @@ class _HomePageState extends State<HomePage> {
                 // TODO: CHANGE IT
                 changeVisibility: () {},
                 doneTasksCount:
-                    Provider.of<TasksNotifier>(context).listTasks.length,
+                    Provider.of<TasksNotifier>(context).countCloseTask,
                 visibility: false,
               ),
               floating: true,

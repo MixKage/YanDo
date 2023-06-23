@@ -6,6 +6,8 @@ class TasksNotifier extends ChangeNotifier {
   final List<TaskModel> listTasks;
   List<TaskModel> listCloseTasks = [];
 
+  int get countCloseTask => listTasks.fold(0, (t, e) => t + (e.done ? 1 : 0));
+
   TasksNotifier(this.listTasks);
 
   factory TasksNotifier.fromHive() =>
@@ -32,4 +34,6 @@ class TasksNotifier extends ChangeNotifier {
     listTasks.removeAt(index);
     notifyListeners();
   }
+
+  void hideDoneList() {}
 }

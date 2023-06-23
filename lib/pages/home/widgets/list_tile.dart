@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yando/logger/logger.dart';
+import 'package:yando/model/importance.dart';
 import 'package:yando/model/task.dart';
 import 'package:yando/model/tasks_notifier.dart';
 import 'package:yando/navigation/nav_service.dart';
@@ -78,11 +79,11 @@ class _MyListTileState extends State<MyListTile> {
               ),
               // TODO: CHANGE_IT ON ENUM
               SizedBox(
-                width: widget.task.importance == '!! Высокий' ||
-                        widget.task.importance == 'Низкий'
+                width: widget.task.importance == Importance.important.name ||
+                        widget.task.importance == Importance.low.name
                     ? 20
                     : 0,
-                child: widget.task.importance == '!! Высокий'
+                child: widget.task.importance == Importance.important.name
                     ? const Text(
                         '!!',
                         textAlign: TextAlign.center,
@@ -92,7 +93,7 @@ class _MyListTileState extends State<MyListTile> {
                           fontSize: 20,
                         ),
                       )
-                    : widget.task.importance == 'Низкий'
+                    : widget.task.importance == Importance.low.name
                         ? const Icon(
                             Icons.arrow_downward_outlined,
                             size: 18,
