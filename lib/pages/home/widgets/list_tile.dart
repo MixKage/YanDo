@@ -45,8 +45,32 @@ class _MyListTileState extends State<MyListTile> {
 
   @override
   Widget build(BuildContext context) => Dismissible(
-        background: Container(color: Colors.green),
-        secondaryBackground: Container(color: const Color(0xFFFF3B30)),
+        background: ColoredBox(
+          color: Colors.green,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 15),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Icon(
+                Icons.done,
+                color: Theme.of(context).scaffoldBackgroundColor,
+              ),
+            ),
+          ),
+        ),
+        secondaryBackground: ColoredBox(
+          color: Colors.red,
+          child: Padding(
+            padding: const EdgeInsets.only(right: 15),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Icon(
+                Icons.delete,
+                color: Theme.of(context).scaffoldBackgroundColor,
+              ),
+            ),
+          ),
+        ),
         key: ValueKey<int>(widget.task.id),
         confirmDismiss: (DismissDirection direction) async {
           if (direction == DismissDirection.startToEnd) {

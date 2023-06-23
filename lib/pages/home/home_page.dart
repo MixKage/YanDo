@@ -52,11 +52,14 @@ class _HomePageState extends State<HomePage> {
           slivers: <Widget>[
             SliverPersistentHeader(
               delegate: HomeAppBarDelegate(
-                // TODO: CHANGE IT
-                changeVisibility: () {},
+                changeVisibility: () {
+                  Provider.of<TasksNotifier>(context, listen: false)
+                      .hideDoneList(isVisible: visible);
+                  visible = !visible;
+                },
                 doneTasksCount:
                     Provider.of<TasksNotifier>(context).countCloseTask,
-                visibility: false,
+                visibility: visible,
               ),
               floating: true,
               pinned: true,

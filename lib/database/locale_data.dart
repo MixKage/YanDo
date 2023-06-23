@@ -14,13 +14,16 @@ class LocaleData {
   late Box _box;
   late String deviceId;
 
-  int get newId => _box.values.map((e) => TaskModel.fromJson(e).id).reduce(max);
+  int get newId => _box.length == 0
+      ? 0
+      : _box.values.map((e) => TaskModel.fromJson(e).id).reduce(max) + 1;
 
   int get length => _box.length;
 
   Future<void> initAsync() async {
     await Hive.initFlutter();
     _box = await Hive.openBox('yando_tasks');
+
     // final deviceInfoPlugin = DeviceInfoPlugin();
     // final deviceInfo = await deviceInfoPlugin.deviceInfo;
     // final allInfo = deviceInfo.data;

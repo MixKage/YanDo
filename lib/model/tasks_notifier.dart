@@ -35,5 +35,26 @@ class TasksNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  void hideDoneList() {}
+  void hideDoneList({required bool isVisible}) {
+    for (int i = 0; i < listTasks.length; i++) {
+      if (!isVisible) {
+        if (listTasks[i].done) {
+          listCloseTasks.add(listTasks[i]);
+          listTasks.removeAt(i);
+        }
+      } else {
+        for (int i = 0; i < listCloseTasks.length; i++) {
+          listTasks.add(listCloseTasks[i]);
+          listCloseTasks.removeAt(i);
+        }
+      }
+    }
+    notifyListeners();
+  }
+
+  void deleteAll() {
+    listTasks.clear();
+    listCloseTasks.clear();
+    LocaleData.instance.deleteAll();
+  }
 }
