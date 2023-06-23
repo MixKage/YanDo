@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:yando/logger/logger.dart';
 import 'package:yando/model/task.dart';
@@ -12,21 +14,7 @@ class LocaleData {
   late Box _box;
   late String deviceId;
 
-  int get newId {
-    // В случае, если список элементов пуст
-    if (_box.length == 0) {
-      return 0;
-    } else {
-      // Новый элемент может быть с отрицательным индексом
-      // (при создании новой таски через floatingActionButton)
-      // Такой элемент может быть только один и обязательно в конце списка
-      if (TaskModel.fromJson(_box.getAt(_box.length - 1)).id == -1) {
-        return TaskModel.fromJson(_box.getAt(_box.length - 2)).id + 1;
-      } else {
-        return TaskModel.fromJson(_box.getAt(_box.length - 1)).id + 1;
-      }
-    }
-  }
+  int get newId => _box.values.map((e) => TaskModel.fromJson(e).id).reduce(max);
 
   int get length => _box.length;
 
