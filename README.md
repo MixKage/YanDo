@@ -3,12 +3,14 @@
 | <img src=github_images/yando_icon.png width="70" /> | YanDo - инновационное приложение, которое станет вашим незаменимым помощником в организации и повышении производительности вашей жизни! |
 | --- | --- |
 
+С YanDo вы можете превратить хаос в порядок, легко управлять своими задачами и достигать новых вершин в достижении своих целей. Это мощный инструмент, разработанный с учетом всех ваших потребностей, чтобы вы могли сосредоточиться на самом важном.
+
 | <img src=github_images/home_page.png width="300" /> | <img src=github_images/edit_task.png width="300" /> | <img src=github_images/time_data_picker.png width="300" /> |
 | --- | --- | --- |
 | <img src=github_images/home_page_dark.png width="300" /> | <img src=github_images/edit_task_dark.png width="300" /> | <img src=github_images/time_data_picker_dark.png width="300" /> |
 
-
 ## Возможности
+
 
 ✅ Возможность добавить задачу используя ElevatedButton или просто написав её название
 
@@ -21,6 +23,7 @@
 ✅ Синхронизация всех данных с локальной базой данных
 
 ✅ Синхронизация всех данных с сервером
+
 
 ## Библиотеки
 
