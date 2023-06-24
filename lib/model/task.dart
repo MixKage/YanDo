@@ -68,28 +68,34 @@ class TaskModel {
         'last_updated_by': lastUpdatedBy
       };
 
-  // ChangeIT
   TaskModel.fromJsonServer(Map<dynamic, dynamic> json)
-      : id = json['id'],
+      : id = int.parse(json['id']),
         text = json['text'],
         importance = json['importance'],
-        deadline = json['deadline'],
-        done = json['done'],
+        deadline = json['deadline'] == null
+            ? null
+            : DateTime.fromMicrosecondsSinceEpoch(json['deadline']),
+        done = json['done'] as bool,
         color = json['color'],
-        createdAt = json['created_at'],
-        changedAt = json['changed_at'],
+        createdAt = DateTime.fromMicrosecondsSinceEpoch(json['created_at']),
+        changedAt = DateTime.fromMicrosecondsSinceEpoch(json['changed_at']),
         lastUpdatedBy = json['last_updated_by'];
 
-  // To Json Server
   Map<dynamic, dynamic> toJsonServer() => {
-        'id': id,
+        'id': id.toString(),
         'text': text,
         'importance': importance,
-        'deadline': deadline,
+        'deadline': deadline?.millisecondsSinceEpoch,
         'done': done,
         'color': color,
-        'created_at': createdAt,
-        'changed_at': changedAt,
+        'created_at': createdAt.millisecondsSinceEpoch,
+        'changed_at': changedAt.millisecondsSinceEpoch,
         'last_updated_by': lastUpdatedBy
       };
+
+  static List encondeToJson(List<TaskModel> list) {
+    final jsonList = [];
+    list.map((item) => jsonList.add(item.toJson())).toList();
+    return jsonList;
+  }
 }

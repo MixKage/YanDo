@@ -12,10 +12,10 @@ class CreateTaskTile extends StatefulWidget {
 }
 
 class _CreateTaskTileState extends State<CreateTaskTile> {
-  void createTask(String text) {
+  Future<void> createTask(String text) async {
     MyLogger.instance.mes('Create Task $text');
     final newTask = TaskModel.defaultWithTextTask(text);
-    Provider.of<TasksNotifier>(context, listen: false).addTask(newTask);
+    await Provider.of<TasksNotifier>(context, listen: false).addTask(newTask);
   }
 
   @override

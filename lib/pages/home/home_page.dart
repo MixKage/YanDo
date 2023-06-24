@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:yando/internet/internet_service.dart';
 import 'package:yando/model/task.dart';
 import 'package:yando/model/tasks_notifier.dart';
 import 'package:yando/navigation/nav_service.dart';
@@ -33,6 +34,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     _scrollController = ScrollController();
+    Provider.of<TasksNotifier>(context, listen: false).getFromServer();
     super.initState();
   }
 
@@ -53,9 +55,10 @@ class _HomePageState extends State<HomePage> {
             SliverPersistentHeader(
               delegate: HomeAppBarDelegate(
                 changeVisibility: () {
-                  Provider.of<TasksNotifier>(context, listen: false)
-                      .hideDoneList(isVisible: visible);
-                  visible = !visible;
+                  IS.instance.getAll();
+                  // Provider.of<TasksNotifier>(context, listen: false)
+                  //     .hideDoneList(isVisible: visible);
+                  // visible = !visible;
                 },
                 doneTasksCount:
                     Provider.of<TasksNotifier>(context).countCloseTask,

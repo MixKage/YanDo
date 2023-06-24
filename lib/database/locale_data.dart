@@ -12,6 +12,7 @@ class LocaleData {
   factory LocaleData() => instance;
 
   late Box _box;
+  late Box _appInfo;
   late String deviceId;
 
   int get newId => _box.length == 0
@@ -20,14 +21,17 @@ class LocaleData {
 
   int get length => _box.length;
 
+  int get revision => _appInfo.get('revision', defaultValue: 0);
+
+  set revision(int r) => _appInfo.put('revision', r);
+
   Future<void> initAsync() async {
     await Hive.initFlutter();
     _box = await Hive.openBox('yando_tasks');
-
+    _appInfo = await Hive.openBox('app_info');
     // final deviceInfoPlugin = DeviceInfoPlugin();
     // final deviceInfo = await deviceInfoPlugin.deviceInfo;
     // final allInfo = deviceInfo.data;
-    // print(allInfo);
     deviceId = '';
     //deviceId = deviceInfo.data;
   }
@@ -79,7 +83,7 @@ class LocaleData {
   List<TaskModel> getListTasks() =>
       _box.values.map((e) => TaskModel.fromJson(e)).toList();
 
-  void deleteAll() {
-    _box.clear();
+  Future<void> deleteAll() async {
+    await _box.clear();
   }
 }

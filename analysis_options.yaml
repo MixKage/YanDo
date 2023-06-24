@@ -13,7 +13,6 @@ linter:
     avoid_catches_without_on_clauses: true
     avoid_catching_errors: true
     avoid_double_and_int_checks: true
-    avoid_dynamic_calls: true
     avoid_empty_else: true
     avoid_equals_and_hash_code_on_mutable_classes: true
     avoid_escaping_inner_quotes: true
@@ -136,7 +135,6 @@ linter:
     unnecessary_const: true
     unnecessary_constructor_name: true
     unnecessary_getters_setters: true
-    unnecessary_lambdas: true
     unnecessary_late: true
     unnecessary_new: true
     unnecessary_null_aware_assignments: true

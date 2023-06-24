@@ -39,8 +39,6 @@ class _MyListTileState extends State<MyListTile> {
     MyLogger.instance.mes('Start edite ${widget.task.id} task');
     await NavigationService.instance
         .pushNamed(NavigationPaths.task, widget.task);
-    // TODO: CHEK_IT
-    // setState(() {});
   }
 
   @override
@@ -101,7 +99,6 @@ class _MyListTileState extends State<MyListTile> {
                   });
                 },
               ),
-              // TODO: CHANGE_IT ON ENUM
               SizedBox(
                 width: widget.task.importance == Importance.important.name ||
                         widget.task.importance == Importance.low.name

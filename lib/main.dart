@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:yando/database/locale_data.dart';
 import 'package:yando/model/tasks_notifier.dart';
@@ -7,6 +8,7 @@ import 'package:yando/theme/app_theme.dart';
 
 Future<void> main() async {
   await LocaleData.instance.initAsync();
+  await dotenv.load();
   runApp(const MyApp());
 }
 
