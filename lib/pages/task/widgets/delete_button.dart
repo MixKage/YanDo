@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DeleteButton extends StatelessWidget {
   const DeleteButton({required this.func, super.key});
@@ -12,14 +13,14 @@ class DeleteButton extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
-            children: const [
-              Icon(
+            children: [
+              const Icon(
                 Icons.delete,
                 color: Colors.red,
               ),
               Text(
-                'Удалить',
-                style: TextStyle(color: Colors.red),
+                AppLocalizations.of(context)!.delete,
+                style: const TextStyle(color: Colors.red),
               ),
             ],
           ),

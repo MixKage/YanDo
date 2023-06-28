@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:yando/logger/logger.dart';
 import 'package:yando/model/task.dart';
@@ -22,8 +23,8 @@ class _CreateTaskTileState extends State<CreateTaskTile> {
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.only(left: 42),
         child: TextField(
-          decoration: const InputDecoration(
-            hintText: 'Что-то надо сделать...',
+          decoration: InputDecoration(
+            hintText: AppLocalizations.of(context)!.create_task_from_textField,
           ),
           onSubmitted: (value) {
             // Для удаления всех задач

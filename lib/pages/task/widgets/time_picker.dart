@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TimePicker extends StatefulWidget {
   const TimePicker({
@@ -30,29 +31,29 @@ class _TimePickerState extends State<TimePicker> {
   String getMonth({required int index}) {
     switch (index) {
       case 1:
-        return 'января';
+        return AppLocalizations.of(context)!.january;
       case 2:
-        return 'февраля';
+        return AppLocalizations.of(context)!.february;
       case 3:
-        return 'марта';
+        return AppLocalizations.of(context)!.march;
       case 4:
-        return 'апреля';
+        return AppLocalizations.of(context)!.april;
       case 5:
-        return 'мая';
+        return AppLocalizations.of(context)!.may;
       case 6:
-        return 'июня';
+        return AppLocalizations.of(context)!.june;
       case 7:
-        return 'июля';
+        return AppLocalizations.of(context)!.july;
       case 8:
-        return 'августа';
+        return AppLocalizations.of(context)!.august;
       case 9:
-        return 'сентября';
+        return AppLocalizations.of(context)!.september;
       case 10:
-        return 'октября';
+        return AppLocalizations.of(context)!.october;
       case 11:
-        return 'ноября';
+        return AppLocalizations.of(context)!.november;
       case 12:
-        return 'декабря';
+        return AppLocalizations.of(context)!.december;
       default:
         return '';
     }
@@ -94,7 +95,7 @@ class _TimePickerState extends State<TimePicker> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Сделать до',
+                AppLocalizations.of(context)!.deadline,
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
               if (dateTimeOn)

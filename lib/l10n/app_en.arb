@@ -1,0 +1,32 @@
+{
+  "language": "English",
+  "my_work": "My work",
+  "count_close": "Closed - {count}",
+  "@count_close": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "create_task_from_textField": "Something needs to be done...",
+  "lvl": "Importance",
+  "low": "Low",
+  "basic": "Basic",
+  "important": "Important",
+  "deadline": "Deadline",
+  "delete": "Delete",
+  "save": "Save",
+  "january": "january",
+  "february": "february",
+  "march": "march",
+  "april": "april",
+  "may": "may",
+  "june": "june",
+  "july": "july",
+  "august": "august",
+  "september": "september",
+  "october": "october",
+  "november": "november",
+  "december": "december"
+}
