@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:yando/database/locale_data.dart';
-import 'package:yando/model/count_close_tasks.dart';
+import 'package:yando/l10n/l10n.dart';
+import 'package:yando/model/tasks_notifier.dart';
 import 'package:yando/navigation/nav_service.dart';
 import 'package:yando/theme/app_theme.dart';
 
 Future<void> main() async {
   await LocaleData.instance.initAsync();
+  await dotenv.load();
   runApp(const MyApp());
 }
 
@@ -31,12 +36,19 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) => MultiProvider(
         providers: [
           ChangeNotifierProvider(
-            create: (context) => CountCloseTasks(),
+            create: (context) => TasksNotifier.fromHive(),
           )
         ],
         child: MaterialApp(
-          theme: AppTheme.theme(false),
-          darkTheme: AppTheme.theme(),
+          supportedLocales: Ln10n.all,
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          theme: AppTheme.themeLight,
+          darkTheme: AppTheme.themeDark,
           navigatorKey: _navigatorKey,
           initialRoute: navigationService.initialRoute,
           debugShowCheckedModeBanner: false,

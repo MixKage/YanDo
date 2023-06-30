@@ -1,9 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter/material.dart' hide ListTile;
 import 'package:provider/provider.dart';
-import 'package:yando/database/locale_data.dart';
-import 'package:yando/model/count_close_tasks.dart';
 import 'package:yando/model/task.dart';
+import 'package:yando/model/tasks_notifier.dart';
 import 'package:yando/navigation/nav_service.dart';
 import 'package:yando/pages/home/widgets/create_task_tile.dart';
 import 'package:yando/pages/home/widgets/home_sliver_bar.dart';
@@ -18,11 +16,23 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late ScrollController _scrollController;
-  bool visible = false;
+
+  Future<void> createNewTask() async {
+    final newTask = TaskModel.defaultTask()..id = -1;
+
+    Provider.of<TasksNotifier>(context, listen: false).addTask(newTask);
+    await NavigationService.instance.pushNamed(
+      NavigationPaths.task,
+      Provider.of<TasksNotifier>(context, listen: false).listTasks[
+          Provider.of<TasksNotifier>(context, listen: false).listTasks.length -
+              1],
+    );
+  }
 
   @override
   void initState() {
     _scrollController = ScrollController();
+    Provider.of<TasksNotifier>(context, listen: false).getFromServer();
     super.initState();
   }
 
@@ -32,45 +42,35 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  void createTask({
-    required String type,
-    required bool isChecked,
-    required String text,
-  }) {
-    final newTask = TaskModel(
-      type: type,
-      isChecked: isChecked,
-      text: text,
-      dateTime: null,
-    );
-    LocaleData.instance.addTask(newTask);
-  }
-
   @override
   Widget build(BuildContext context) => Scaffold(
         floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            //createTask(type: 'Нет', isChecked: false, text: '');
-            await NavigationService.instance.pushNamed(NavigationPaths.task);
-          },
+          onPressed: createNewTask,
           child: const Icon(Icons.add),
         ),
         body: CustomScrollView(
           slivers: <Widget>[
             SliverPersistentHeader(
               delegate: HomeAppBarDelegate(
-                // TODO: CHANGE IT
-                changeVisibility: () {},
+                changeVisibility: () {
+                  // IS.instance.getAll();
+                  // Provider.of<TasksNotifier>(context, listen: false)
+                  //     .hideDoneList(isVisible: visible);
+                  // visible = !visible;
+                  Provider.of<TasksNotifier>(context, listen: false)
+                          .visibility =
+                      !Provider.of<TasksNotifier>(context, listen: false)
+                          .visibility;
+                },
                 doneTasksCount:
-                    Provider.of<CountCloseTasks>(context).countCloseTask,
-                visibility: false,
+                    Provider.of<TasksNotifier>(context).countCloseTask,
+                visibility: Provider.of<TasksNotifier>(context).visibility,
               ),
               floating: true,
               pinned: true,
             ),
-            ValueListenableBuilder(
-              valueListenable: Hive.box('yando_tasks').listenable(),
-              builder: (context, box, child) => SliverToBoxAdapter(
+            Consumer<TasksNotifier>(
+              builder: (context, notifier, _) => SliverToBoxAdapter(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: DecoratedBox(
@@ -82,10 +82,14 @@ class _HomePageState extends State<HomePage> {
                       padding: EdgeInsets.zero,
                       shrinkWrap: true,
                       controller: _scrollController,
-                      itemCount: box.length + 1,
-                      itemBuilder: (context, index) => (index != box.length)
-                          ? MyListTile(index: index)
-                          : const CreateTaskTile(),
+                      itemCount: notifier.listTasks.length + 1,
+                      itemBuilder: (context, index) =>
+                          (index != notifier.listTasks.length)
+                              ? ListTile(
+                                  key: ValueKey(notifier.listTasks[index].done),
+                                  task: notifier.listTasks[index],
+                                )
+                              : const CreateTaskTile(),
                     ),
                   ),
                 ),

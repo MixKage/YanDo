@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeAppBarDelegate extends SliverPersistentHeaderDelegate {
   const HomeAppBarDelegate({
@@ -54,7 +55,7 @@ class HomeAppBarDelegate extends SliverPersistentHeaderDelegate {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'Мои дела',
+                        AppLocalizations.of(context)!.my_work,
                         style: TextStyle.lerp(
                           Theme.of(context).textTheme.headlineSmall,
                           Theme.of(context).textTheme.titleLarge,
@@ -69,7 +70,8 @@ class HomeAppBarDelegate extends SliverPersistentHeaderDelegate {
                             duration: const Duration(milliseconds: 200),
                             opacity: progress < 0.2 ? 1 : 0,
                             child: Text(
-                              'Выполненно — $doneTasksCount',
+                              AppLocalizations.of(context)!
+                                  .count_close(doneTasksCount),
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyLarge!

@@ -1,39 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:yando/database/locale_data.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 import 'package:yando/logger/logger.dart';
+import 'package:yando/model/importance.dart';
 import 'package:yando/model/task.dart';
+import 'package:yando/model/tasks_notifier.dart';
 import 'package:yando/pages/task/widgets/delete_button.dart';
 import 'package:yando/pages/task/widgets/time_picker.dart';
 
 class TaskPage extends StatefulWidget {
-  const TaskPage({required this.taskId, super.key});
+  const TaskPage({required this.task, super.key});
 
-  final int? taskId;
+  final TaskModel? task;
 
   @override
   State<TaskPage> createState() => _TaskPageState();
 }
 
 class _TaskPageState extends State<TaskPage> {
-  final List<String> _type = ['Нет', 'Низкий', '!! Высокий'];
-  String _selectedType = 'Нет';
-  late final int _idTask;
-  late TaskModel _taskModel;
+  Importance _selectedType = Importance.basic;
   late TextEditingController _textController;
   late DateTime? _dateTime;
 
   @override
   void initState() {
     _textController = TextEditingController();
-    if (widget.taskId == null) {
-      _idTask = LocaleData.instance.length;
-      _taskModel = TaskModel.defaultTask();
-    } else {
-      _idTask = widget.taskId!.toInt();
-      _taskModel = LocaleData.instance.getTaskById(_idTask);
-    }
     initData();
-    MyLogger.instance.mes(_taskModel.toJson().toString());
+    MyLogger.instance.mes(widget.task!.toJson().toString());
     super.initState();
   }
 
@@ -44,21 +37,28 @@ class _TaskPageState extends State<TaskPage> {
   }
 
   void initData() {
-    _selectedType = _taskModel.type;
-    _textController.text = _taskModel.text;
-    _dateTime = _taskModel.dateTime;
+    _selectedType =
+        Importance.values.firstWhere((e) => e.name == widget.task!.importance);
+    _textController.text = widget.task!.text;
+    _dateTime = widget.task!.deadline;
   }
 
   void saveTask() {
-    _taskModel.text = _textController.text;
-    _taskModel.dateTime = _dateTime;
-    _taskModel.type = _selectedType;
-    if (widget.taskId == null) {
-      LocaleData.instance.addTask(_taskModel);
-    } else {
-      LocaleData.instance.updateTask(_idTask, _taskModel);
-    }
+    widget.task!
+      ..text = _textController.text
+      ..deadline = _dateTime
+      ..importance = _selectedType.name;
+
+    Provider.of<TasksNotifier>(context, listen: false).updateTask(widget.task!);
     Navigator.pop(context);
+  }
+
+  void unsaveExit() {
+    if (widget.task!.id == -1) {
+      deleteTask();
+    } else {
+      Navigator.of(context).pop();
+    }
   }
 
   Future<DateTime> selectDateTime() async {
@@ -75,123 +75,124 @@ class _TaskPageState extends State<TaskPage> {
   }
 
   void deleteTask() {
-    LocaleData.instance.removeTaskByid(_idTask);
+    Provider.of<TasksNotifier>(context, listen: false)
+        .removeTaskById(widget.task!.id);
     Navigator.pop(context);
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        leading: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: Navigator.of(context).pop,
-            borderRadius: BorderRadius.circular(8),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(
-                Icons.clear,
-                color: Theme.of(context).secondaryHeaderColor,
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          leading: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: unsaveExit,
+              borderRadius: BorderRadius.circular(8),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Icon(
+                  Icons.clear,
+                  color: Theme.of(context).secondaryHeaderColor,
+                ),
               ),
             ),
           ),
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: TextButton(
-              style: ButtonStyle(
-                overlayColor: MaterialStateProperty.all(Colors.black12),
-              ),
-              onPressed: saveTask,
-              child: Text(
-                'сохранить',
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-            ),
-          )
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Material(
-                elevation: 1,
-                borderRadius: BorderRadius.circular(8),
-                child: TextField(
-                  controller: _textController,
-                  minLines: 4,
-                  maxLines: 100,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                  decoration: const InputDecoration(
-                    hintText: 'Что-то надо сделать...',
-                  ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: TextButton(
+                style: ButtonStyle(
+                  overlayColor: MaterialStateProperty.all(Colors.black12),
+                ),
+                onPressed: saveTask,
+                child: Text(
+                  AppLocalizations.of(context)!.save,
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
               ),
-              const SizedBox(height: 28),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Важность',
-                    style: Theme.of(context).textTheme.bodyLarge,
+            )
+          ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Material(
+                  elevation: 1,
+                  borderRadius: BorderRadius.circular(8),
+                  child: TextField(
+                    controller: _textController,
+                    minLines: 4,
+                    maxLines: 100,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    decoration: InputDecoration(
+                      hintText: AppLocalizations.of(context)!
+                          .create_task_from_textField,
+                    ),
                   ),
-                  DropdownButton(
-                    iconSize: 0.0,
-                    underline: const SizedBox(),
-                    value: _selectedType,
-                    items: _type
-                        .map(
-                          (e) => DropdownMenuItem(
-                            value: e,
-                            child: Container(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                e,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: e == '!! Высокий'
-                                      ? Colors.red
-                                      : Theme.of(context).secondaryHeaderColor,
+                ),
+                const SizedBox(height: 28),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      AppLocalizations.of(context)!.lvl,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    DropdownButton<Importance>(
+                      iconSize: 0.0,
+                      underline: const SizedBox(),
+                      value: _selectedType,
+                      items: Importance.values
+                          .map(
+                            (e) => DropdownMenuItem(
+                              value: e,
+                              child: Container(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  e.getLocalizeName(
+                                    AppLocalizations.of(context)!,
+                                  ),
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: e.getColor(Theme.of(context)),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        )
-                        .toList(),
-                    onChanged: (value) {
-                      _selectedType = value.toString();
-                      _taskModel.type = _selectedType;
-                      setState(() {});
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: 22),
-              const Divider(color: Colors.grey),
-              const SizedBox(height: 22),
-              TimePicker(
-                selectData: selectDateTime,
-                offData: () {
-                  _dateTime = null;
-                },
-                dateTime: _dateTime,
-              ),
-              const SizedBox(height: 22),
-              const Divider(color: Colors.grey),
-              const SizedBox(height: 14),
-              widget.taskId == null
-                  ? const SizedBox()
-                  : DeleteButton(func: deleteTask),
-            ],
+                          )
+                          .toList(),
+                      onChanged: (value) {
+                        _selectedType = value!;
+                        widget.task!.importance = _selectedType.name;
+                        setState(() {});
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 22),
+                const Divider(color: Colors.grey),
+                const SizedBox(height: 22),
+                TimePicker(
+                  selectData: selectDateTime,
+                  offData: () {
+                    _dateTime = null;
+                  },
+                  dateTime: _dateTime,
+                ),
+                const SizedBox(height: 22),
+                const Divider(color: Colors.grey),
+                const SizedBox(height: 14),
+                if (widget.task!.id == -1)
+                  const SizedBox()
+                else
+                  DeleteButton(func: deleteTask),
+              ],
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
 }

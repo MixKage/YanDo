@@ -1,0 +1,33 @@
+{
+  "language": "Русский",
+  "my_work": "Мои дела",
+  "count_close": "Выполненно - {count}",
+  "@count_close": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "create_task_from_textField": "Что-то надо сделать...",
+  "create_task": "Новое...",
+  "lvl": "Важность",
+  "low": "Низкий",
+  "basic": "Нет",
+  "important": "!! Высокий",
+  "deadline": "Сделать до",
+  "delete": "Удалить",
+  "save": "Сохранить",
+  "january": "января",
+  "february": "февраля",
+  "march": "марта",
+  "april": "апреля",
+  "may": "мая",
+  "june": "июня",
+  "july": "июля",
+  "august": "августа",
+  "september": "сентября",
+  "october": "октября",
+  "november": "ноября",
+  "december": "декабря"
+}
