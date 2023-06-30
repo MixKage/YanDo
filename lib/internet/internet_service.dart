@@ -15,13 +15,13 @@ class IS {
 
   final _dio = Dio();
 
-  final _optionsIS = Options(
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ${dotenv.get('TOKEN')}',
-      'X-Last-Known-Revision': LocaleData.instance.revision,
-    },
-  );
+  Options get _optionsIS => Options(
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${dotenv.get('TOKEN')}',
+          'X-Last-Known-Revision': LocaleData.instance.revision,
+        },
+      );
 
   Future<List<TaskModel>?> getAll() async {
     List<TaskModel>? listTasks;
