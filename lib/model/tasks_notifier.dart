@@ -8,6 +8,14 @@ class TasksNotifier extends ChangeNotifier {
   List<TaskModel> listCloseTasks = [];
 
   int get countCloseTask => listTasks.fold(0, (t, e) => t + (e.done ? 1 : 0));
+  bool _visibility = false;
+
+  bool get visibility => _visibility;
+
+  set visibility(bool val) {
+    _visibility = val;
+    notifyListeners();
+  }
 
   TasksNotifier(this.listTasks);
 
@@ -43,23 +51,6 @@ class TasksNotifier extends ChangeNotifier {
     final index = LocaleData.instance.removeTaskById(id);
     listTasks.removeAt(index);
     await IS.instance.deleteById(id);
-    notifyListeners();
-  }
-
-  void hideDoneList({required bool isVisible}) {
-    for (int i = 0; i < listTasks.length; i++) {
-      if (!isVisible) {
-        if (listTasks[i].done) {
-          listCloseTasks.add(listTasks[i]);
-          listTasks.removeAt(i);
-        }
-      } else {
-        for (int i = 0; i < listCloseTasks.length; i++) {
-          listTasks.add(listCloseTasks[i]);
-          listCloseTasks.removeAt(i);
-        }
-      }
-    }
     notifyListeners();
   }
 

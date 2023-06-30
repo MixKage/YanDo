@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide ListTile;
 import 'package:provider/provider.dart';
-import 'package:yando/internet/internet_service.dart';
 import 'package:yando/model/task.dart';
 import 'package:yando/model/tasks_notifier.dart';
 import 'package:yando/navigation/nav_service.dart';
@@ -17,7 +16,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late ScrollController _scrollController;
-  bool visible = false;
 
   Future<void> createNewTask() async {
     final newTask = TaskModel.defaultTask()..id = -1;
@@ -55,14 +53,18 @@ class _HomePageState extends State<HomePage> {
             SliverPersistentHeader(
               delegate: HomeAppBarDelegate(
                 changeVisibility: () {
-                  IS.instance.getAll();
+                  // IS.instance.getAll();
                   // Provider.of<TasksNotifier>(context, listen: false)
                   //     .hideDoneList(isVisible: visible);
                   // visible = !visible;
+                  Provider.of<TasksNotifier>(context, listen: false)
+                          .visibility =
+                      !Provider.of<TasksNotifier>(context, listen: false)
+                          .visibility;
                 },
                 doneTasksCount:
                     Provider.of<TasksNotifier>(context).countCloseTask,
-                visibility: visible,
+                visibility: Provider.of<TasksNotifier>(context).visibility,
               ),
               floating: true,
               pinned: true,
@@ -83,7 +85,8 @@ class _HomePageState extends State<HomePage> {
                       itemCount: notifier.listTasks.length + 1,
                       itemBuilder: (context, index) =>
                           (index != notifier.listTasks.length)
-                              ? MyListTile(
+                              ? ListTile(
+                                  key: ValueKey(notifier.listTasks[index].done),
                                   task: notifier.listTasks[index],
                                 )
                               : const CreateTaskTile(),
