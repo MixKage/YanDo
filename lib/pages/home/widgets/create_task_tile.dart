@@ -24,7 +24,7 @@ class _CreateTaskTileState extends State<CreateTaskTile> {
         padding: const EdgeInsets.only(left: 42),
         child: TextField(
           decoration: InputDecoration(
-            hintText: AppLocalizations.of(context)!.create_task_from_textField,
+            hintText: AppLocalizations.of(context)!.create_task,
           ),
           onSubmitted: (value) {
             // Для удаления всех задач

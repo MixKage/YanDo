@@ -139,7 +139,7 @@ class _TaskPageState extends State<TaskPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      AppLocalizations.of(context)!.important,
+                      AppLocalizations.of(context)!.lvl,
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
                     DropdownButton<Importance>(
@@ -153,18 +153,12 @@ class _TaskPageState extends State<TaskPage> {
                               child: Container(
                                 alignment: Alignment.centerLeft,
                                 child: Text(
-                                  e.name == Importance.important.name
-                                      ? '!! ${AppLocalizations.of(context)!.important}'
-                                      : (e.name == Importance.low.name
-                                          ? AppLocalizations.of(context)!.low
-                                          : AppLocalizations.of(context)!
-                                              .basic),
+                                  e.getLocalizeName(
+                                    AppLocalizations.of(context)!,
+                                  ),
                                   style: TextStyle(
                                     fontSize: 14,
-                                    color: e == Importance.important
-                                        ? Colors.red
-                                        : Theme.of(context)
-                                            .secondaryHeaderColor,
+                                    color: e.getColor(Theme.of(context)),
                                   ),
                                 ),
                               ),

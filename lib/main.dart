@@ -41,15 +41,14 @@ class _MyAppState extends State<MyApp> {
         ],
         child: MaterialApp(
           supportedLocales: Ln10n.all,
-          locale: const Locale('en'),
           localizationsDelegates: const [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
           ],
-          theme: AppTheme.theme(false),
-          darkTheme: AppTheme.theme(),
+          theme: AppTheme.themeLight,
+          darkTheme: AppTheme.themeDark,
           navigatorKey: _navigatorKey,
           initialRoute: navigationService.initialRoute,
           debugShowCheckedModeBanner: false,

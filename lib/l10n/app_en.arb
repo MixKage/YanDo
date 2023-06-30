@@ -10,10 +10,11 @@
     }
   },
   "create_task_from_textField": "Something needs to be done...",
+  "create_task": "New task...",
   "lvl": "Importance",
   "low": "Low",
   "basic": "Basic",
-  "important": "Important",
+  "important": "!! Important",
   "deadline": "Deadline",
   "delete": "Delete",
   "save": "Save",

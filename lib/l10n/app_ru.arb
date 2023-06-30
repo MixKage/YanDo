@@ -10,10 +10,11 @@
     }
   },
   "create_task_from_textField": "Что-то надо сделать...",
+  "create_task": "Новое...",
   "lvl": "Важность",
   "low": "Низкий",
   "basic": "Нет",
-  "important": "Высокий",
+  "important": "!! Высокий",
   "deadline": "Сделать до",
   "delete": "Удалить",
   "save": "Сохранить",
