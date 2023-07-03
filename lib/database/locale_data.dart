@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:hive_flutter/hive_flutter.dart';
@@ -36,6 +37,14 @@ class LD {
     //deviceId = deviceInfo.data;
   }
 
+  Future<void> testInit() async {
+    var path = Directory.current.path;
+    Hive.init('$path/test/hive_testing_path');
+    _box = await Hive.openBox('yando_tasks');
+    _appInfo = await Hive.openBox('app_info');
+    deviceId = '';
+  }
+
   void addTask(TaskModel taskModel) {
     MyLogger.instance.mes('Create Task'
         '${taskModel.toJson()}');
@@ -72,6 +81,7 @@ class LD {
         '$id');
     for (int i = 0; i < length; i++) {
       if (TaskModel.fromJson(_box.getAt(i)).id == id) {
+        MyLogger.instance.mes('Deleted task by id $id');
         _box.deleteAt(i);
         return i;
       }
