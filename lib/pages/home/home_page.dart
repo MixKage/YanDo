@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart' hide ListTile;
 import 'package:provider/provider.dart';
-import 'package:yando/model/task.dart';
 import 'package:yando/model/tasks_notifier.dart';
 import 'package:yando/navigation/nav_service.dart';
 import 'package:yando/pages/home/widgets/create_task_tile.dart';
@@ -24,13 +23,9 @@ class _HomePageState extends State<HomePage> {
   late TasksNotifier tNL;
 
   Future<void> createNewTask() async {
-    final newTask = TaskModel.defaultTask()..id = -1;
-
-    tNL.addTask(newTask);
-    await NavigationService.instance.pushNamed(
-      NavigationPaths.task,
-      tNL.listTasks[tNL.listTasks.length - 1],
-    );
+    //TODO: DELIT
+    // tNL.addTask(newTask);
+    await NavigationService.instance.pushNamed(NavigationPaths.task);
   }
 
   Future<void> onRefresh() async {

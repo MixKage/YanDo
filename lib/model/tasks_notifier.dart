@@ -23,10 +23,6 @@ class TasksNotifier extends ChangeNotifier {
   Future<void> addTask(TaskModel taskModel) async {
     LD.instance.addTask(taskModel);
     listTasks.add(taskModel);
-    if (taskModel.id != -1) {
-      await IS.instance.createTask(taskModel);
-    }
-
     notifyListeners();
   }
 
@@ -35,11 +31,8 @@ class TasksNotifier extends ChangeNotifier {
       ..changedAt = DateTime.now()
       // TODO: CHANGE_IT ON UNIQ ID DEVICE
       ..lastUpdatedBy = '';
-    if (taskModel.id == -1) {
-      await IS.instance.createTask(taskModel);
-    } else {
-      await IS.instance.updateTaskById(taskModel);
-    }
+
+    await IS.instance.updateTaskById(taskModel);
     final index = LD.instance.updateTask(taskModel);
     listTasks[index] = taskModel;
     notifyListeners();
