@@ -17,16 +17,35 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late ScrollController _scrollController;
 
+  // TaskNotifier
+  late TasksNotifier tN;
+
+  // TaskNotifierNoListener
+  late TasksNotifier tNL;
+
   Future<void> createNewTask() async {
     final newTask = TaskModel.defaultTask()..id = -1;
 
-    Provider.of<TasksNotifier>(context, listen: false).addTask(newTask);
+    tNL.addTask(newTask);
     await NavigationService.instance.pushNamed(
       NavigationPaths.task,
-      Provider.of<TasksNotifier>(context, listen: false).listTasks[
-          Provider.of<TasksNotifier>(context, listen: false).listTasks.length -
-              1],
+      tNL.listTasks[tNL.listTasks.length - 1],
     );
+  }
+
+  Future<void> onRefresh() async {
+    await tNL.syncList();
+  }
+
+  void changeVisibility() {
+    tNL.visibility = !tNL.visibility;
+  }
+
+  @override
+  void didChangeDependencies() {
+    tN = Provider.of<TasksNotifier>(context);
+    tNL = Provider.of<TasksNotifier>(context, listen: false);
+    super.didChangeDependencies();
   }
 
   @override
@@ -49,23 +68,15 @@ class _HomePageState extends State<HomePage> {
           child: const Icon(Icons.add),
         ),
         body: RefreshIndicator(
-          onRefresh: () async {
-            await Provider.of<TasksNotifier>(context, listen: false).syncList();
-          },
+          onRefresh: onRefresh,
           edgeOffset: 184,
           child: CustomScrollView(
             slivers: <Widget>[
               SliverPersistentHeader(
                 delegate: HomeAppBarDelegate(
-                  changeVisibility: () {
-                    Provider.of<TasksNotifier>(context, listen: false)
-                            .visibility =
-                        !Provider.of<TasksNotifier>(context, listen: false)
-                            .visibility;
-                  },
-                  doneTasksCount:
-                      Provider.of<TasksNotifier>(context).countCloseTask,
-                  visibility: Provider.of<TasksNotifier>(context).visibility,
+                  changeVisibility: changeVisibility,
+                  doneTasksCount: tN.countCloseTask,
+                  visibility: tN.visibility,
                 ),
                 floating: true,
                 pinned: true,

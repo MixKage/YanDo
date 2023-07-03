@@ -74,11 +74,11 @@ class TaskModel {
         importance = json['importance'],
         deadline = json['deadline'] == null
             ? null
-            : DateTime.fromMicrosecondsSinceEpoch(json['deadline']),
+            : DateTime.fromMillisecondsSinceEpoch(json['deadline']),
         done = json['done'] as bool,
         color = json['color'],
-        createdAt = DateTime.fromMicrosecondsSinceEpoch(json['created_at']),
-        changedAt = DateTime.fromMicrosecondsSinceEpoch(json['changed_at']),
+        createdAt = DateTime.fromMillisecondsSinceEpoch(json['created_at']),
+        changedAt = DateTime.fromMillisecondsSinceEpoch(json['changed_at']),
         lastUpdatedBy = json['last_updated_by'];
 
   Map<dynamic, dynamic> toJsonServer() => {
