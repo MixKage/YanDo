@@ -2,9 +2,7 @@ import 'package:flutter/material.dart' hide ListTile;
 import 'package:provider/provider.dart';
 import 'package:yando/model/tasks_notifier.dart';
 import 'package:yando/navigation/nav_service.dart';
-import 'package:yando/pages/home/widgets/create_task_tile.dart';
-import 'package:yando/pages/home/widgets/home_sliver_bar.dart';
-import 'package:yando/pages/home/widgets/list_tile.dart';
+import 'package:yando/pages/home/widgets/home_widgets.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,8 +21,6 @@ class _HomePageState extends State<HomePage> {
   late TasksNotifier tNL;
 
   Future<void> createNewTask() async {
-    //TODO: DELIT
-    // tNL.addTask(newTask);
     await NavigationService.instance.pushNamed(NavigationPaths.task);
   }
 

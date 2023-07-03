@@ -21,6 +21,7 @@ class _TaskPageState extends State<TaskPage> {
   late TaskModel task;
   late TextEditingController _textController;
   late DateTime? _dateTime;
+  late TasksNotifier tNL;
 
   @override
   void initState() {
@@ -34,6 +35,12 @@ class _TaskPageState extends State<TaskPage> {
   void dispose() {
     _textController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    tNL = Provider.of<TasksNotifier>(context, listen: false);
+    super.didChangeDependencies();
   }
 
   void initData() {
@@ -55,9 +62,9 @@ class _TaskPageState extends State<TaskPage> {
       ..deadline = _dateTime
       ..importance = _selectedType.name;
     if (widget.task == null) {
-      Provider.of<TasksNotifier>(context, listen: false).addTask(task);
+      tNL.addTask(task);
     } else {
-      Provider.of<TasksNotifier>(context, listen: false).updateTask(task);
+      tNL.updateTask(task);
     }
     Navigator.pop(context);
   }
@@ -80,7 +87,7 @@ class _TaskPageState extends State<TaskPage> {
   }
 
   void deleteTask() {
-    Provider.of<TasksNotifier>(context, listen: false).removeTaskById(task.id);
+    tNL.removeTaskById(task.id);
     Navigator.pop(context);
   }
 
