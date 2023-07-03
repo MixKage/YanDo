@@ -19,7 +19,7 @@ class IS {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ${dotenv.get('TOKEN')}',
-          'X-Last-Known-Revision': LocaleData.instance.revision,
+          'X-Last-Known-Revision': LD.instance.revision,
         },
       );
 
@@ -30,7 +30,7 @@ class IS {
         '${dotenv.get('API_URL')}/list',
         options: _optionsIS,
       );
-      LocaleData.instance.revision = response.data['revision'];
+      LD.instance.revision = response.data['revision'];
       final tasksJson = response.data['list'] as List;
       listTasks = tasksJson.map((e) => TaskModel.fromJsonServer(e)).toList();
     } on DioException catch (e) {
@@ -39,15 +39,29 @@ class IS {
     return listTasks;
   }
 
+  Future<int> getRevision() async {
+    try {
+      final response = await _dio.get(
+        '${dotenv.get('API_URL')}/list',
+        options: _optionsIS,
+      );
+      return LD.instance.revision = response.data['revision'];
+    } on DioException catch (e) {
+      MyLogger.instance.err(e);
+      return -1;
+    }
+  }
+
   Future<List<TaskModel>?> updateAll(List<TaskModel> localList) async {
     List<TaskModel>? listTasks;
     try {
+      LD.instance.revision = await getRevision();
       final response = await _dio.patch(
         '${dotenv.get('API_URL')}/list',
         options: _optionsIS,
-        data: 'list: ${TaskModel.encondeToJson(localList)}',
+        data: jsonEncode({'list': TaskModel.encondeToJson(localList)}),
       );
-      LocaleData.instance.revision = response.data['revision'];
+      LD.instance.revision = response.data['revision'];
       final tasksJson = response.data['list'] as List;
       listTasks = tasksJson.map((e) => TaskModel.fromJsonServer(e)).toList();
     } on DioException catch (e) {
@@ -58,12 +72,13 @@ class IS {
 
   Future<void> updateTaskById(TaskModel task) async {
     try {
+      LD.instance.revision = await getRevision();
       final response = await _dio.put(
         '${dotenv.get('API_URL')}/list/${task.id}',
         options: _optionsIS,
         data: jsonEncode({'element': task.toJsonServer()}),
       );
-      LocaleData.instance.revision = response.data['revision'];
+      LD.instance.revision = response.data['revision'];
     } on DioException catch (e) {
       MyLogger.instance.err(e);
     }
@@ -71,12 +86,13 @@ class IS {
 
   Future<void> createTask(TaskModel task) async {
     try {
+      LD.instance.revision = await getRevision();
       final response = await _dio.post(
         '${dotenv.get('API_URL')}/list',
         options: _optionsIS,
         data: jsonEncode({'element': task.toJsonServer()}),
       );
-      LocaleData.instance.revision = response.data['revision'];
+      LD.instance.revision = response.data['revision'];
     } on DioException catch (e) {
       MyLogger.instance.err(e);
     }
@@ -84,11 +100,12 @@ class IS {
 
   Future<void> deleteById(int id) async {
     try {
+      LD.instance.revision = await getRevision();
       final response = await _dio.delete(
         '${dotenv.get('API_URL')}/list/$id',
         options: _optionsIS,
       );
-      LocaleData.instance.revision = response.data['revision'];
+      LD.instance.revision = response.data['revision'];
     } on DioException catch (e) {
       MyLogger.instance.err(e);
     }

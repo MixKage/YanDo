@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:yando/logger/logger.dart';
 import 'package:yando/model/importance.dart';
@@ -34,6 +35,11 @@ class _ListTileContentState extends State<ListTileContent> {
     MyLogger.instance.mes('Start edite ${widget.task.id} task');
     await NavigationService.instance
         .pushNamed(NavigationPaths.task, widget.task);
+  }
+
+  String getDateText(DateTime dateTime) {
+    final dateFormat = DateFormat('yyyy-MM-dd');
+    return dateFormat.format(dateTime);
   }
 
   @override
@@ -94,34 +100,61 @@ class _ListTileContentState extends State<ListTileContent> {
                   });
                 },
               ),
-              SizedBox(
-                width: widget.task.importance == Importance.important.name ||
-                        widget.task.importance == Importance.low.name
-                    ? 20
-                    : 0,
-                child: widget.task.importance == Importance.important.name
-                    ? const Text(
-                        '!!',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                      )
-                    : widget.task.importance == Importance.low.name
-                        ? const Icon(
-                            Icons.arrow_downward_outlined,
-                            size: 18,
-                          )
-                        : null,
-              ),
               Expanded(
-                child: Text(
-                  widget.task.text,
-                  style: widget.task.done
-                      ? const TextStyle(decoration: TextDecoration.lineThrough)
-                      : null,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: widget.task.importance ==
+                                      Importance.important.name ||
+                                  widget.task.importance == Importance.low.name
+                              ? 20
+                              : 0,
+                          child: widget.task.importance ==
+                                  Importance.important.name
+                              ? const Text(
+                                  '!!',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                  ),
+                                )
+                              : widget.task.importance == Importance.low.name
+                                  ? const Icon(
+                                      Icons.arrow_downward_outlined,
+                                      size: 18,
+                                    )
+                                  : null,
+                        ),
+                        Expanded(
+                          child: Text(
+                            widget.task.text,
+                            style: widget.task.done
+                                ? const TextStyle(
+                                    color: Colors.grey,
+                                    decoration: TextDecoration.lineThrough,
+                                  )
+                                : null,
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (widget.task.deadline == null)
+                      const SizedBox()
+                    else
+                      Text(
+                        getDateText(widget.task.deadline!),
+                        style: widget.task.done
+                            ? const TextStyle(
+                                color: Colors.grey,
+                              )
+                            : null,
+                      ),
+                  ],
                 ),
               ),
               Material(

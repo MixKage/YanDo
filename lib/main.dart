@@ -10,7 +10,7 @@ import 'package:yando/navigation/nav_service.dart';
 import 'package:yando/theme/app_theme.dart';
 
 Future<void> main() async {
-  await LocaleData.instance.initAsync();
+  await LD.instance.initAsync();
   await dotenv.load();
   runApp(const MyApp());
 }

@@ -25,7 +25,7 @@ class TaskModel {
   });
 
   TaskModel.defaultTask()
-      : id = LocaleData.instance.newId,
+      : id = LD.instance.newId,
         text = '',
         importance = Importance.basic.name,
         deadline = null,
@@ -33,17 +33,17 @@ class TaskModel {
         color = null,
         createdAt = DateTime.now(),
         changedAt = DateTime.now(),
-        lastUpdatedBy = LocaleData.instance.deviceId;
+        lastUpdatedBy = LD.instance.deviceId;
 
   TaskModel.defaultWithTextTask(this.text)
-      : id = LocaleData.instance.newId,
+      : id = LD.instance.newId,
         importance = Importance.basic.name,
         deadline = null,
         done = false,
         color = null,
         createdAt = DateTime.now(),
         changedAt = DateTime.now(),
-        lastUpdatedBy = LocaleData.instance.deviceId;
+        lastUpdatedBy = LD.instance.deviceId;
 
   TaskModel.fromJson(Map<dynamic, dynamic> json)
       : id = json['id'],
@@ -95,7 +95,7 @@ class TaskModel {
 
   static List encondeToJson(List<TaskModel> list) {
     final jsonList = [];
-    list.map((item) => jsonList.add(item.toJson())).toList();
+    list.map((item) => jsonList.add(item.toJsonServer())).toList();
     return jsonList;
   }
 }

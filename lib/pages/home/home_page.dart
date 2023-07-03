@@ -48,54 +48,56 @@ class _HomePageState extends State<HomePage> {
           onPressed: createNewTask,
           child: const Icon(Icons.add),
         ),
-        body: CustomScrollView(
-          slivers: <Widget>[
-            SliverPersistentHeader(
-              delegate: HomeAppBarDelegate(
-                changeVisibility: () {
-                  // IS.instance.getAll();
-                  // Provider.of<TasksNotifier>(context, listen: false)
-                  //     .hideDoneList(isVisible: visible);
-                  // visible = !visible;
-                  Provider.of<TasksNotifier>(context, listen: false)
-                          .visibility =
-                      !Provider.of<TasksNotifier>(context, listen: false)
-                          .visibility;
-                },
-                doneTasksCount:
-                    Provider.of<TasksNotifier>(context).countCloseTask,
-                visibility: Provider.of<TasksNotifier>(context).visibility,
+        body: RefreshIndicator(
+          onRefresh: () async {
+            await Provider.of<TasksNotifier>(context, listen: false).syncList();
+          },
+          edgeOffset: 184,
+          child: CustomScrollView(
+            slivers: <Widget>[
+              SliverPersistentHeader(
+                delegate: HomeAppBarDelegate(
+                  changeVisibility: () {
+                    Provider.of<TasksNotifier>(context, listen: false)
+                            .visibility =
+                        !Provider.of<TasksNotifier>(context, listen: false)
+                            .visibility;
+                  },
+                  doneTasksCount:
+                      Provider.of<TasksNotifier>(context).countCloseTask,
+                  visibility: Provider.of<TasksNotifier>(context).visibility,
+                ),
+                floating: true,
+                pinned: true,
               ),
-              floating: true,
-              pinned: true,
-            ),
-            Consumer<TasksNotifier>(
-              builder: (context, notifier, _) => SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: Theme.of(context).cardColor,
-                    ),
-                    child: ListView.builder(
-                      padding: EdgeInsets.zero,
-                      shrinkWrap: true,
-                      controller: _scrollController,
-                      itemCount: notifier.listTasks.length + 1,
-                      itemBuilder: (context, index) =>
-                          (index != notifier.listTasks.length)
-                              ? ListTile(
-                                  key: ValueKey(notifier.listTasks[index].done),
-                                  task: notifier.listTasks[index],
-                                )
-                              : const CreateTaskTile(),
+              Consumer<TasksNotifier>(
+                builder: (context, notifier, _) => SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: Theme.of(context).cardColor,
+                      ),
+                      child: ListView.builder(
+                        padding: EdgeInsets.zero,
+                        shrinkWrap: true,
+                        controller: _scrollController,
+                        itemCount: notifier.listTasks.length + 1,
+                        itemBuilder: (context, index) => (index !=
+                                notifier.listTasks.length)
+                            ? ListTile(
+                                key: ValueKey(notifier.listTasks[index].done),
+                                task: notifier.listTasks[index],
+                              )
+                            : const CreateTaskTile(),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
 }

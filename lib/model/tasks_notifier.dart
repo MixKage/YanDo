@@ -5,7 +5,6 @@ import 'package:yando/model/task.dart';
 
 class TasksNotifier extends ChangeNotifier {
   List<TaskModel> listTasks;
-  List<TaskModel> listCloseTasks = [];
 
   int get countCloseTask => listTasks.fold(0, (t, e) => t + (e.done ? 1 : 0));
   bool _visibility = false;
@@ -19,11 +18,10 @@ class TasksNotifier extends ChangeNotifier {
 
   TasksNotifier(this.listTasks);
 
-  factory TasksNotifier.fromHive() =>
-      TasksNotifier(LocaleData.instance.getListTasks());
+  factory TasksNotifier.fromHive() => TasksNotifier(LD.instance.getListTasks());
 
   Future<void> addTask(TaskModel taskModel) async {
-    LocaleData.instance.addTask(taskModel);
+    LD.instance.addTask(taskModel);
     listTasks.add(taskModel);
     if (taskModel.id != -1) {
       await IS.instance.createTask(taskModel);
@@ -42,13 +40,13 @@ class TasksNotifier extends ChangeNotifier {
     } else {
       await IS.instance.updateTaskById(taskModel);
     }
-    final index = LocaleData.instance.updateTask(taskModel);
+    final index = LD.instance.updateTask(taskModel);
     listTasks[index] = taskModel;
     notifyListeners();
   }
 
   Future<void> removeTaskById(int id) async {
-    final index = LocaleData.instance.removeTaskById(id);
+    final index = LD.instance.removeTaskById(id);
     listTasks.removeAt(index);
     await IS.instance.deleteById(id);
     notifyListeners();
@@ -59,9 +57,9 @@ class TasksNotifier extends ChangeNotifier {
     if (taskModels != null) {
       listTasks = List.from(taskModels);
     }
-    await LocaleData.instance.deleteAll();
+    await LD.instance.deleteAll();
     for (int i = 0; i < listTasks.length; i++) {
-      LocaleData.instance.addTask(listTasks[i]);
+      LD.instance.addTask(listTasks[i]);
     }
     notifyListeners();
   }
@@ -74,7 +72,6 @@ class TasksNotifier extends ChangeNotifier {
 
   void deleteAll() {
     listTasks.clear();
-    listCloseTasks.clear();
-    LocaleData.instance.deleteAll();
+    LD.instance.deleteAll();
   }
 }

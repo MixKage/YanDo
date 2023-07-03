@@ -4,12 +4,12 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:yando/logger/logger.dart';
 import 'package:yando/model/task.dart';
 
-class LocaleData {
-  LocaleData._();
+class LD {
+  LD._();
 
-  static LocaleData instance = LocaleData._();
+  static LD instance = LD._();
 
-  factory LocaleData() => instance;
+  factory LD() => instance;
 
   late Box _box;
   late Box _appInfo;
