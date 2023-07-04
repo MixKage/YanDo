@@ -119,16 +119,14 @@ class _TaskPageState extends State<TaskPage> {
                 const SizedBox(height: indent),
                 TimePicker(
                   selectData: selectDateTime,
-                  offData: () {
-                    _dateTime = null;
-                  },
+                  offData: () => _dateTime = null,
                   dateTime: _dateTime,
                 ),
                 const SizedBox(height: indent),
                 const Divider(color: Colors.grey),
                 const SizedBox(height: indent),
                 if (widget.task == null)
-                  const SizedBox()
+                  const SizedBox.shrink()
                 else
                   DeleteButton(func: deleteTask),
               ],

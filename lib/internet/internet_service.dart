@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:yando/database/locale_data.dart';
+import 'package:yando/database/local_data.dart';
 import 'package:yando/logger/logger.dart';
 import 'package:yando/model/task.dart';
 
@@ -59,7 +59,7 @@ class IS {
       final response = await _dio.patch(
         '${dotenv.get('API_URL')}/list',
         options: _optionsIS,
-        data: jsonEncode({'list': TaskModel.encondeToJson(localList)}),
+        data: jsonEncode({'list': TaskModel.encodeToJson(localList)}),
       );
       LD.instance.revision = response.data['revision'];
       final tasksJson = response.data['list'] as List;

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:yando/database/locale_data.dart';
+import 'package:yando/database/local_data.dart';
 import 'package:yando/internet/internet_service.dart';
 import 'package:yando/model/task.dart';
 
 class TasksNotifier extends ChangeNotifier {
   List<TaskModel> listTasks;
 
+  // listTasks.where((task) => task.done).toList().size
   int get countCloseTask => listTasks.fold(0, (t, e) => t + (e.done ? 1 : 0));
   bool _visibility = false;
 

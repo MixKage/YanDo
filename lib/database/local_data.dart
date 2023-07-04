@@ -93,7 +93,5 @@ class LD {
   List<TaskModel> getListTasks() =>
       _box.values.map((e) => TaskModel.fromJson(e)).toList();
 
-  Future<void> deleteAll() async {
-    await _box.clear();
-  }
+  Future<void> deleteAll() => _box.clear();
 }

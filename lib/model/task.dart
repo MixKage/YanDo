@@ -1,4 +1,4 @@
-import 'package:yando/database/locale_data.dart';
+import 'package:yando/database/local_data.dart';
 import 'package:yando/model/importance.dart';
 
 class TaskModel {
@@ -93,9 +93,6 @@ class TaskModel {
         'last_updated_by': lastUpdatedBy
       };
 
-  static List encondeToJson(List<TaskModel> list) {
-    final jsonList = [];
-    list.map((item) => jsonList.add(item.toJsonServer())).toList();
-    return jsonList;
-  }
+  static List encodeToJson(List<TaskModel> list) =>
+      list.map((item) => item.toJsonServer()).toList();
 }

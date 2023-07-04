@@ -32,7 +32,7 @@ class _ListTileContentState extends State<ListTileContent> {
   }
 
   Future<void> editTask() async {
-    MyLogger.instance.mes('Start edite ${widget.task.id} task');
+    MyLogger.instance.mes('Start edit ${widget.task.id} task');
     await NavigationService.instance
         .pushNamed(NavigationPaths.task, widget.task);
   }

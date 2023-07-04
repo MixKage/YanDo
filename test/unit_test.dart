@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:yando/database/locale_data.dart';
+import 'package:yando/database/local_data.dart';
 import 'package:yando/model/task.dart';
 
 Future<void> main() async {
