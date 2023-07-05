@@ -33,7 +33,7 @@ class TaskModel {
         color = null,
         createdAt = DateTime.now(),
         changedAt = DateTime.now(),
-        lastUpdatedBy = LD.instance.deviceId;
+        lastUpdatedBy = LD.instance.idDevice;
 
   TaskModel.defaultWithTextTask(this.text)
       : id = LD.instance.newId,
@@ -43,7 +43,7 @@ class TaskModel {
         color = null,
         createdAt = DateTime.now(),
         changedAt = DateTime.now(),
-        lastUpdatedBy = LD.instance.deviceId;
+        lastUpdatedBy = LD.instance.idDevice;
 
   TaskModel.fromJson(Map<dynamic, dynamic> json)
       : id = json['id'],

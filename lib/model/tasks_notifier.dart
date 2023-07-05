@@ -47,14 +47,14 @@ class TasksNotifier extends ChangeNotifier {
   }
 
   Future<void> getFromServer() async {
-    final taskModels = await IS.instance.getAll();
-    if (taskModels != null) {
-      listTasks = List.from(taskModels);
-    }
-    await LD.instance.deleteAll();
-    for (int i = 0; i < listTasks.length; i++) {
-      LD.instance.addTask(listTasks[i]);
-    }
+    listTasks = await IS.instance.updateAll(LD.instance.getListTasks()) ?? [];
+    // if (taskModels != null) {
+    //   listTasks = List.from(taskModels);
+    // }
+    // await LD.instance.deleteAll();
+    // for (int i = 0; i < listTasks.length; i++) {
+    //   LD.instance.addTask(listTasks[i]);
+    // }
     notifyListeners();
   }
 
