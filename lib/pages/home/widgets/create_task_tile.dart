@@ -23,6 +23,7 @@ class _CreateTaskTileState extends State<CreateTaskTile> {
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.only(left: 42),
         child: TextField(
+          key: const ValueKey('textFieldCreateTask'),
           decoration: InputDecoration(
             hintText: AppLocalizations.of(context)!.create_task,
           ),
