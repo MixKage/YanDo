@@ -23,6 +23,7 @@ class TasksNotifier extends ChangeNotifier {
 
   Future<void> addTask(TaskModel taskModel) async {
     LD.instance.addTask(taskModel);
+    await IS.instance.createTask(taskModel);
     listTasks.add(taskModel);
     notifyListeners();
   }
@@ -30,8 +31,7 @@ class TasksNotifier extends ChangeNotifier {
   Future<void> updateTask(TaskModel taskModel) async {
     taskModel
       ..changedAt = DateTime.now()
-      // TODO: CHANGE_IT ON UNIQ ID DEVICE
-      ..lastUpdatedBy = '';
+      ..lastUpdatedBy = LD.instance.idDevice;
 
     await IS.instance.updateTaskById(taskModel);
     final index = LD.instance.updateTask(taskModel);
@@ -47,7 +47,10 @@ class TasksNotifier extends ChangeNotifier {
   }
 
   Future<void> getFromServer() async {
+    //final tasks = await IS.instance.getAll();
+
     listTasks = await IS.instance.updateAll(LD.instance.getListTasks()) ?? [];
+
     // if (taskModels != null) {
     //   listTasks = List.from(taskModels);
     // }
@@ -58,8 +61,41 @@ class TasksNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Синхронизирует локальные с облачнными данными.
+  // Обновляет таски взависимости от времени последнего
+  // изменения. Таски созданные на другом устройстве
+  // не будут удалены.
   Future<void> syncList() async {
-    final syncList = await IS.instance.updateAll(listTasks);
+    final sList = await IS.instance.getAll();
+    final lList = LD.instance.getListTasks();
+    final List<TaskModel> result = [];
+
+    if (sList == null) {
+      await IS.instance.updateAll(listTasks);
+      listTasks = List.from(lList);
+      notifyListeners();
+      return;
+    }
+
+    for (int i = 0; i < sList.length; i++) {
+      bool isRepeat = false;
+      for (int j = 0; j < lList.length; j++) {
+        if (sList[i].id == lList[j].id) {
+          isRepeat = true;
+          break;
+        }
+      }
+      if (!isRepeat) {
+        result.add(sList[i]);
+        isRepeat = false;
+      }
+    }
+
+    for (int i = 0; i < result.length; i++) {
+      lList.add(result[i]);
+    }
+
+    final syncList = await IS.instance.updateAll(lList);
     listTasks = syncList == null ? [] : List.from(syncList);
     notifyListeners();
   }

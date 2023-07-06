@@ -53,7 +53,7 @@ class IS {
   }
 
   Future<List<TaskModel>?> updateAll(List<TaskModel> localList) async {
-    List<TaskModel>? listTasks;
+    List<TaskModel>? listTasks = LD.instance.getListTasks();
     try {
       LD.instance.revision = await getRevision();
       final response = await _dio.patch(
