@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:yando/theme/extension_theme.dart';
 
 class AppTheme {
   static final ThemeData themeLight = ThemeData(
@@ -50,6 +51,13 @@ class AppTheme {
       filled: true,
       fillColor: const Color(0xFFFFFFFF),
     ),
+    extensions: const <ThemeExtension<dynamic>>[
+      MyExtension(
+        error: Color(0xFFFF3B30),
+        grey: Color(0xFF8E8E93),
+        green: Color(0xFF34C759),
+      ),
+    ],
     useMaterial3: false,
   );
 
@@ -102,6 +110,13 @@ class AppTheme {
       filled: true,
       fillColor: const Color(0xFF252528),
     ),
+    extensions: const <ThemeExtension<dynamic>>[
+      MyExtension(
+        error: Color(0xFFFF453A),
+        grey: Color(0xFF8E8E93),
+        green: Color(0xFF32D74B),
+      ),
+    ],
     useMaterial3: false,
   );
 

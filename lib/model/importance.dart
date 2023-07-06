@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:yando/theme/theme.dart';
 
 enum Importance {
   low('Низкий'),
@@ -23,7 +24,7 @@ enum Importance {
 
   Color getColor(ThemeData themeData) {
     if (this == Importance.important) {
-      return Colors.red;
+      return themeData.extension<MyExtension>()!.error!;
     } else {
       return themeData.secondaryHeaderColor;
     }

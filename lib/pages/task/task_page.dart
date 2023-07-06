@@ -1,12 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:yando/logger/logger.dart';
 import 'package:yando/model/importance.dart';
 import 'package:yando/model/task.dart';
 import 'package:yando/model/tasks_notifier.dart';
-import 'package:yando/pages/task/widgets/delete_button.dart';
-import 'package:yando/pages/task/widgets/time_picker.dart';
+import 'package:yando/pages/task/widgets/task_widgets.dart';
+import 'package:yando/theme/theme.dart';
+
+extension on List<Widget> {
+  List<Widget> _insertBetweenAll(Widget widget) {
+    final result = List<Widget>.empty(growable: true);
+    for (int i = 0; i < length; i++) {
+      result.add(this[i]);
+      if (i != length - 1 && this[i].runtimeType != Divider) {
+        result.add(widget);
+      }
+    }
+    return result;
+  }
+}
 
 class TaskPage extends StatefulWidget {
   const TaskPage({required this.task, super.key});
@@ -18,15 +30,18 @@ class TaskPage extends StatefulWidget {
 }
 
 class _TaskPageState extends State<TaskPage> {
+  static const double indent = 24;
   Importance _selectedType = Importance.basic;
+  late TaskModel task;
   late TextEditingController _textController;
   late DateTime? _dateTime;
+  late TasksNotifier tNL;
 
   @override
   void initState() {
     _textController = TextEditingController();
     initData();
-    MyLogger.instance.mes(widget.task!.toJson().toString());
+    MyLogger.instance.mes(task.toJson().toString());
     super.initState();
   }
 
@@ -36,36 +51,47 @@ class _TaskPageState extends State<TaskPage> {
     super.dispose();
   }
 
+  @override
+  void didChangeDependencies() {
+    tNL = Provider.of<TasksNotifier>(context, listen: false);
+    super.didChangeDependencies();
+  }
+
   void initData() {
+    if (widget.task == null) {
+      task = TaskModel.defaultTask();
+    } else {
+      task = widget.task!;
+    }
+
     _selectedType =
-        Importance.values.firstWhere((e) => e.name == widget.task!.importance);
-    _textController.text = widget.task!.text;
-    _dateTime = widget.task!.deadline;
+        Importance.values.firstWhere((e) => e.name == task.importance);
+    _textController.text = task.text;
+    _dateTime = task.deadline;
   }
 
   void saveTask() {
-    widget.task!
+    task
       ..text = _textController.text
       ..deadline = _dateTime
       ..importance = _selectedType.name;
-
-    Provider.of<TasksNotifier>(context, listen: false).updateTask(widget.task!);
+    if (widget.task == null) {
+      tNL.addTask(task);
+    } else {
+      tNL.updateTask(task);
+    }
     Navigator.pop(context);
   }
 
   void unsaveExit() {
-    if (widget.task!.id == -1) {
-      deleteTask();
-    } else {
-      Navigator.of(context).pop();
-    }
+    Navigator.of(context).pop();
   }
 
   Future<DateTime> selectDateTime() async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: _dateTime ?? DateTime.now(),
-      firstDate: DateTime(2015, 8),
+      firstDate: DateTime(1969, 8),
       lastDate: DateTime(2101),
     );
     if (picked != null && picked != _dateTime) {
@@ -75,122 +101,48 @@ class _TaskPageState extends State<TaskPage> {
   }
 
   void deleteTask() {
-    Provider.of<TasksNotifier>(context, listen: false)
-        .removeTaskById(widget.task!.id);
+    tNL.removeTaskById(task.id);
     Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          leading: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: unsaveExit,
-              borderRadius: BorderRadius.circular(8),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Icon(
-                  Icons.clear,
-                  color: Theme.of(context).secondaryHeaderColor,
-                ),
-              ),
-            ),
-          ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: TextButton(
-                style: ButtonStyle(
-                  overlayColor: MaterialStateProperty.all(Colors.black12),
-                ),
-                onPressed: saveTask,
-                child: Text(
-                  AppLocalizations.of(context)!.save,
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-              ),
-            )
-          ],
+        appBar: AppBarTaskPage(
+          unsaveExit: unsaveExit,
+          saveTask: saveTask,
         ),
         body: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: Theme.of(context).extension<MyExtension>()!.bigEdgeInsets,
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Material(
-                  elevation: 1,
-                  borderRadius: BorderRadius.circular(8),
-                  child: TextField(
-                    controller: _textController,
-                    minLines: 4,
-                    maxLines: 100,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    decoration: InputDecoration(
-                      hintText: AppLocalizations.of(context)!
-                          .create_task_from_textField,
-                    ),
-                  ),
+                TextFieldTaskPage(textController: _textController),
+                ImportantComboBox(
+                  selectedType: _selectedType,
+                  task: task,
+                  onChanged: (value) {
+                    _selectedType = value!;
+                    task.importance = _selectedType.name;
+                    setState(() {});
+                  },
                 ),
-                const SizedBox(height: 28),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      AppLocalizations.of(context)!.lvl,
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                    DropdownButton<Importance>(
-                      iconSize: 0.0,
-                      underline: const SizedBox(),
-                      value: _selectedType,
-                      items: Importance.values
-                          .map(
-                            (e) => DropdownMenuItem(
-                              value: e,
-                              child: Container(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  e.getLocalizeName(
-                                    AppLocalizations.of(context)!,
-                                  ),
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: e.getColor(Theme.of(context)),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          )
-                          .toList(),
-                      onChanged: (value) {
-                        _selectedType = value!;
-                        widget.task!.importance = _selectedType.name;
-                        setState(() {});
-                      },
-                    ),
-                  ],
+                Divider(
+                  color: Theme.of(context).extension<MyExtension>()!.grey,
                 ),
-                const SizedBox(height: 22),
-                const Divider(color: Colors.grey),
-                const SizedBox(height: 22),
                 TimePicker(
                   selectData: selectDateTime,
-                  offData: () {
-                    _dateTime = null;
-                  },
+                  offData: () => _dateTime = null,
                   dateTime: _dateTime,
                 ),
-                const SizedBox(height: 22),
-                const Divider(color: Colors.grey),
-                const SizedBox(height: 14),
-                if (widget.task!.id == -1)
-                  const SizedBox()
+                Divider(
+                  color: Theme.of(context).extension<MyExtension>()!.grey,
+                ),
+                if (widget.task == null)
+                  const SizedBox.shrink()
                 else
                   DeleteButton(func: deleteTask),
-              ],
+              ]._insertBetweenAll(const SizedBox(height: indent)),
             ),
           ),
         ),

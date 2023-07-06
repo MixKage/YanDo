@@ -23,15 +23,11 @@ class _CreateTaskTileState extends State<CreateTaskTile> {
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.only(left: 42),
         child: TextField(
+          key: const ValueKey('textFieldCreateTask'),
           decoration: InputDecoration(
             hintText: AppLocalizations.of(context)!.create_task,
           ),
           onSubmitted: (value) {
-            // Для удаления всех задач
-            if (value == 'del') {
-              Provider.of<TasksNotifier>(context, listen: false).deleteAll();
-              return;
-            }
             if (value.trim().isNotEmpty) createTask(value);
             MyLogger.instance.mes('Create defaultWithTextTask');
           },

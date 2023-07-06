@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:yando/theme/extension_theme.dart';
 
 class HomeAppBarDelegate extends SliverPersistentHeaderDelegate {
   const HomeAppBarDelegate({
@@ -88,12 +89,16 @@ class HomeAppBarDelegate extends SliverPersistentHeaderDelegate {
                 ),
               ),
               Material(
-                color: Colors.transparent,
+                color: Theme.of(context).extension<MyExtension>()!.transparent,
                 child: InkWell(
                   onTap: changeVisibility,
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: Theme.of(context)
+                      .extension<MyExtension>()!
+                      .normalBorderRadius,
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: Theme.of(context)
+                        .extension<MyExtension>()!
+                        .normalEdgeInsets,
                     child: Icon(
                       visibility ? Icons.visibility_off : Icons.visibility,
                       color: Theme.of(context).primaryColor,

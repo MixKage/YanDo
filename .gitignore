@@ -1,6 +1,7 @@
 # MyAdd
 /macos/
 /ios/
+/test/hive_testing_path/
 
 # Miscellaneous
 *.class

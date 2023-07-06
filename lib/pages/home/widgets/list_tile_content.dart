@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:yando/logger/logger.dart';
 import 'package:yando/model/importance.dart';
 import 'package:yando/model/task.dart';
 import 'package:yando/model/tasks_notifier.dart';
 import 'package:yando/navigation/nav_service.dart';
+import 'package:yando/theme/extension_theme.dart';
 
 class ListTileContent extends StatefulWidget {
   const ListTileContent({
@@ -31,37 +33,34 @@ class _ListTileContentState extends State<ListTileContent> {
   }
 
   Future<void> editTask() async {
-    MyLogger.instance.mes('Start edite ${widget.task.id} task');
+    MyLogger.instance.mes('Start edit ${widget.task.id} task');
     await NavigationService.instance
         .pushNamed(NavigationPaths.task, widget.task);
   }
 
+  String getDateText(DateTime dateTime) {
+    final dateFormat = DateFormat('yyyy-MM-dd');
+    return dateFormat.format(dateTime);
+  }
+
   @override
   Widget build(BuildContext context) => Dismissible(
-        background: ColoredBox(
-          color: Colors.green,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 15),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Icon(
-                Icons.done,
-                color: Theme.of(context).scaffoldBackgroundColor,
-              ),
-            ),
+        background: Container(
+          color: Theme.of(context).extension<MyExtension>()!.green,
+          padding: const EdgeInsets.only(left: 16),
+          alignment: Alignment.centerLeft,
+          child: Icon(
+            Icons.done,
+            color: Theme.of(context).scaffoldBackgroundColor,
           ),
         ),
-        secondaryBackground: ColoredBox(
-          color: Colors.red,
-          child: Padding(
-            padding: const EdgeInsets.only(right: 15),
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Icon(
-                Icons.delete,
-                color: Theme.of(context).scaffoldBackgroundColor,
-              ),
-            ),
+        secondaryBackground: Container(
+          color: Theme.of(context).extension<MyExtension>()!.error,
+          padding: const EdgeInsets.only(left: 16),
+          alignment: Alignment.centerLeft,
+          child: Icon(
+            Icons.delete,
+            color: Theme.of(context).scaffoldBackgroundColor,
           ),
         ),
         key: ValueKey<int>(widget.task.id),
@@ -80,13 +79,14 @@ class _ListTileContentState extends State<ListTileContent> {
         },
         child: DecoratedBox(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius:
+                Theme.of(context).extension<MyExtension>()!.normalBorderRadius,
             color: Theme.of(context).cardColor,
           ),
           child: Row(
             children: [
               Checkbox(
-                activeColor: Colors.green,
+                activeColor: Theme.of(context).extension<MyExtension>()!.green,
                 value: widget.task.done,
                 onChanged: (value) {
                   setState(() {
@@ -94,43 +94,80 @@ class _ListTileContentState extends State<ListTileContent> {
                   });
                 },
               ),
-              SizedBox(
-                width: widget.task.importance == Importance.important.name ||
-                        widget.task.importance == Importance.low.name
-                    ? 20
-                    : 0,
-                child: widget.task.importance == Importance.important.name
-                    ? const Text(
-                        '!!',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                      )
-                    : widget.task.importance == Importance.low.name
-                        ? const Icon(
-                            Icons.arrow_downward_outlined,
-                            size: 18,
-                          )
-                        : null,
-              ),
               Expanded(
-                child: Text(
-                  widget.task.text,
-                  style: widget.task.done
-                      ? const TextStyle(decoration: TextDecoration.lineThrough)
-                      : null,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: widget.task.importance ==
+                                      Importance.important.name ||
+                                  widget.task.importance == Importance.low.name
+                              ? 20
+                              : 0,
+                          child: widget.task.importance ==
+                                  Importance.important.name
+                              ? Text(
+                                  '!!',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Theme.of(context)
+                                        .extension<MyExtension>()!
+                                        .error,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                  ),
+                                )
+                              : widget.task.importance == Importance.low.name
+                                  ? const Icon(
+                                      Icons.arrow_downward_outlined,
+                                      size: 18,
+                                    )
+                                  : null,
+                        ),
+                        Expanded(
+                          child: Text(
+                            widget.task.text,
+                            style: widget.task.done
+                                ? TextStyle(
+                                    color: Theme.of(context)
+                                        .extension<MyExtension>()!
+                                        .grey,
+                                    decoration: TextDecoration.lineThrough,
+                                  )
+                                : null,
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (widget.task.deadline == null)
+                      const SizedBox()
+                    else
+                      Text(
+                        getDateText(widget.task.deadline!),
+                        style: widget.task.done
+                            ? TextStyle(
+                                color: Theme.of(context)
+                                    .extension<MyExtension>()!
+                                    .grey,
+                              )
+                            : null,
+                      ),
+                  ],
                 ),
               ),
               Material(
-                color: Colors.transparent,
+                color: Theme.of(context).extension<MyExtension>()!.transparent,
                 child: InkWell(
                   onTap: editTask,
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: Theme.of(context)
+                      .extension<MyExtension>()!
+                      .normalBorderRadius,
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: Theme.of(context)
+                        .extension<MyExtension>()!
+                        .normalEdgeInsets,
                     child: Icon(
                       Icons.info_outline,
                       color: Theme.of(context).secondaryHeaderColor,

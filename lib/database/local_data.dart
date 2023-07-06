@@ -1,19 +1,20 @@
+import 'dart:io';
 import 'dart:math';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:yando/logger/logger.dart';
 import 'package:yando/model/task.dart';
 
-class LocaleData {
-  LocaleData._();
+class LD {
+  LD._();
 
-  static LocaleData instance = LocaleData._();
+  static LD instance = LD._();
 
-  factory LocaleData() => instance;
+  factory LD() => instance;
 
   late Box _box;
   late Box _appInfo;
-  late String deviceId;
 
   int get newId => _box.length == 0
       ? 0
@@ -25,15 +26,36 @@ class LocaleData {
 
   set revision(int r) => _appInfo.put('revision', r);
 
+  String get idDevice => _appInfo.get('uniq_id', defaultValue: '');
+
+  set idDevice(String id) => _appInfo.put('uniq_id', id);
+
+  Future<String> _getId() async {
+    final deviceInfo = DeviceInfoPlugin();
+    if (Platform.isIOS) {
+      return (await deviceInfo.iosInfo).identifierForVendor ??
+          'Not found IOS ID';
+    } else if (Platform.isAndroid) {
+      return (await deviceInfo.androidInfo).id;
+    } else {
+      return 'Not found UNIQ ID';
+    }
+  }
+
   Future<void> initAsync() async {
     await Hive.initFlutter();
     _box = await Hive.openBox('yando_tasks');
     _appInfo = await Hive.openBox('app_info');
-    // final deviceInfoPlugin = DeviceInfoPlugin();
-    // final deviceInfo = await deviceInfoPlugin.deviceInfo;
-    // final allInfo = deviceInfo.data;
-    deviceId = '';
-    //deviceId = deviceInfo.data;
+    if (idDevice == '') {
+      idDevice = await _getId();
+    }
+  }
+
+  Future<void> testInit() async {
+    final path = Directory.current.path;
+    Hive.init('$path/test/hive_testing_path');
+    _box = await Hive.openBox('yando_tasks');
+    _appInfo = await Hive.openBox('app_info');
   }
 
   void addTask(TaskModel taskModel) {
@@ -58,6 +80,7 @@ class LocaleData {
   TaskModel getTaskById(int id) {
     MyLogger.instance.mes('Get Task by id '
         '$id');
+
     for (int i = 0; i < length; i++) {
       if (TaskModel.fromJson(_box.getAt(i)).id == id) {
         return TaskModel.fromJson(_box.getAt(i));
@@ -65,6 +88,17 @@ class LocaleData {
     }
     MyLogger.instance.err('Undefined task by id $id');
     throw Exception('Undefined task by id $id');
+
+    // in future rewrite on this style
+    // return _box.values
+    //           .map(
+    //             (e) =>
+    //         TaskModel
+    //             .fromJson(e)
+    //             .id == id
+    //             ? TaskModel.fromJson(e)
+    //             : throw Exception('Undefined task by id $id'),
+    //       )
   }
 
   int removeTaskById(int id) {
@@ -72,6 +106,7 @@ class LocaleData {
         '$id');
     for (int i = 0; i < length; i++) {
       if (TaskModel.fromJson(_box.getAt(i)).id == id) {
+        MyLogger.instance.mes('Deleted task by id $id');
         _box.deleteAt(i);
         return i;
       }
@@ -83,7 +118,5 @@ class LocaleData {
   List<TaskModel> getListTasks() =>
       _box.values.map((e) => TaskModel.fromJson(e)).toList();
 
-  Future<void> deleteAll() async {
-    await _box.clear();
-  }
+  Future<void> deleteAll() => _box.clear();
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:yando/theme/theme.dart';
 
 class TimePicker extends StatefulWidget {
   const TimePicker({
@@ -59,33 +60,6 @@ class _TimePickerState extends State<TimePicker> {
     }
   }
 
-  // void saveInfo() {
-  //   final taskModel = TaskModel.fromJson(box.getAt(id));
-  //   if (!dateTimeOn) {
-  //     taskModel.dateTime = null;
-  //   } else {
-  //     taskModel.dateTime = selectedDate;
-  //   }
-  //   box.putAt(id, taskModel.toJson());
-  // }
-  //
-  // Future<void> _selectDate() async {
-  //   final DateTime? picked = await showDatePicker(
-  //     context: context,
-  //     initialDate: selectedDate,
-  //     firstDate: DateTime(2015, 8),
-  //     lastDate: DateTime(2101),
-  //   );
-  //   if (picked != null && picked != selectedDate) {
-  //     selectedDate = picked;
-  //     final box = Hive.box('yando_tasks');
-  //     final taskModel = TaskModel.fromJson(box.getAt(id));
-  //     taskModel.dateTime = picked;
-  //     box.putAt(id, taskModel.toJson());
-  //     setState(() {});
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) => Row(
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -104,7 +78,9 @@ class _TimePickerState extends State<TimePicker> {
                     selectedDate = await widget.selectData();
                     setState(() {});
                   },
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: Theme.of(context)
+                      .extension<MyExtension>()!
+                      .normalBorderRadius,
                   child: Text(
                     '${selectedDate.day} '
                     '${getMonth(index: selectedDate.month)}'

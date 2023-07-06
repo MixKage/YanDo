@@ -25,6 +25,24 @@
 ✅ Синхронизация всех данных с сервером
 
 
+## Реализовано / отклоненно
+
+✅ Синхронизация и мердж данных с сервером
+
+✅ Offline-first (возможность синхронизировать свой прогресс)
+
+✅ Вынесение констант в Extension темы
+
+✅ Unit тесты
+
+✅ Интеграционные тесты
+
+❌ DI - dependency injection
+
+❌ Поддержан диплинк
+
+❌ Поддержка Navigator 2 (Router)
+
 ## Библиотеки
 
 В создании YanDo использовались такие библиотеки как:
@@ -39,12 +57,7 @@
 
 Для успешной компиляции и работы проекта потребуется файл .env с данными API_URL и TOKEN
 
-## Что планируется в будущей версии
+## Скачать последний релиз (V3)
 
-* Сравнение версий и мердж списков
-* Юнит тесты
-
-## Скачать последний релиз
-
-https://github.com/MixKage/YanDo/releases/download/homework2/app-release.apk
-
+https://github.com/MixKage/YanDo/releases/tag/yando3version
+https://github.com/MixKage/YanDo/releases/download/yando3version/app-release.apk
