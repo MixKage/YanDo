@@ -1,4 +1,4 @@
-<img width="109" alt="image" src="https://github.com/MixKage/YanDo/assets/55548743/e7d81fb8-25c0-4d86-8019-4f204f8ea684"># YanDo
+# YanDo
 
 | <img src=github_images/yando_icon.png width="70" /> | YanDo - инновационное приложение, которое станет вашим незаменимым помощником в организации и повышении производительности вашей жизни! |
 | --- | --- |
