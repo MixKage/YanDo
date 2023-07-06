@@ -6,6 +6,7 @@ import 'package:yando/model/importance.dart';
 import 'package:yando/model/task.dart';
 import 'package:yando/model/tasks_notifier.dart';
 import 'package:yando/navigation/nav_service.dart';
+import 'package:yando/theme/extension_theme.dart';
 
 class ListTileContent extends StatefulWidget {
   const ListTileContent({
@@ -44,30 +45,22 @@ class _ListTileContentState extends State<ListTileContent> {
 
   @override
   Widget build(BuildContext context) => Dismissible(
-        background: ColoredBox(
-          color: Colors.green,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 15),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Icon(
-                Icons.done,
-                color: Theme.of(context).scaffoldBackgroundColor,
-              ),
-            ),
+        background: Container(
+          color: Theme.of(context).extension<MyExtension>()!.green,
+          padding: const EdgeInsets.only(left: 16),
+          alignment: Alignment.centerLeft,
+          child: Icon(
+            Icons.done,
+            color: Theme.of(context).scaffoldBackgroundColor,
           ),
         ),
-        secondaryBackground: ColoredBox(
-          color: Colors.red,
-          child: Padding(
-            padding: const EdgeInsets.only(right: 15),
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Icon(
-                Icons.delete,
-                color: Theme.of(context).scaffoldBackgroundColor,
-              ),
-            ),
+        secondaryBackground: Container(
+          color: Theme.of(context).extension<MyExtension>()!.error,
+          padding: const EdgeInsets.only(left: 16),
+          alignment: Alignment.centerLeft,
+          child: Icon(
+            Icons.delete,
+            color: Theme.of(context).scaffoldBackgroundColor,
           ),
         ),
         key: ValueKey<int>(widget.task.id),
@@ -86,13 +79,14 @@ class _ListTileContentState extends State<ListTileContent> {
         },
         child: DecoratedBox(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
+            borderRadius:
+                Theme.of(context).extension<MyExtension>()!.normalBorderRadius,
             color: Theme.of(context).cardColor,
           ),
           child: Row(
             children: [
               Checkbox(
-                activeColor: Colors.green,
+                activeColor: Theme.of(context).extension<MyExtension>()!.green,
                 value: widget.task.done,
                 onChanged: (value) {
                   setState(() {
@@ -114,11 +108,13 @@ class _ListTileContentState extends State<ListTileContent> {
                               : 0,
                           child: widget.task.importance ==
                                   Importance.important.name
-                              ? const Text(
+                              ? Text(
                                   '!!',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    color: Colors.red,
+                                    color: Theme.of(context)
+                                        .extension<MyExtension>()!
+                                        .error,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20,
                                   ),
@@ -134,8 +130,10 @@ class _ListTileContentState extends State<ListTileContent> {
                           child: Text(
                             widget.task.text,
                             style: widget.task.done
-                                ? const TextStyle(
-                                    color: Colors.grey,
+                                ? TextStyle(
+                                    color: Theme.of(context)
+                                        .extension<MyExtension>()!
+                                        .grey,
                                     decoration: TextDecoration.lineThrough,
                                   )
                                 : null,
@@ -149,8 +147,10 @@ class _ListTileContentState extends State<ListTileContent> {
                       Text(
                         getDateText(widget.task.deadline!),
                         style: widget.task.done
-                            ? const TextStyle(
-                                color: Colors.grey,
+                            ? TextStyle(
+                                color: Theme.of(context)
+                                    .extension<MyExtension>()!
+                                    .grey,
                               )
                             : null,
                       ),
@@ -158,12 +158,16 @@ class _ListTileContentState extends State<ListTileContent> {
                 ),
               ),
               Material(
-                color: Colors.transparent,
+                color: Theme.of(context).extension<MyExtension>()!.transparent,
                 child: InkWell(
                   onTap: editTask,
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: Theme.of(context)
+                      .extension<MyExtension>()!
+                      .normalBorderRadius,
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: Theme.of(context)
+                        .extension<MyExtension>()!
+                        .normalEdgeInsets,
                     child: Icon(
                       Icons.info_outline,
                       color: Theme.of(context).secondaryHeaderColor,

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:yando/model/tasks_notifier.dart';
 import 'package:yando/navigation/nav_service.dart';
 import 'package:yando/pages/home/widgets/home_widgets.dart';
+import 'package:yando/theme/theme.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -75,10 +76,14 @@ class _HomePageState extends State<HomePage> {
               Consumer<TasksNotifier>(
                 builder: (context, notifier, _) => SliverToBoxAdapter(
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: Theme.of(context)
+                        .extension<MyExtension>()!
+                        .normalEdgeInsets,
                     child: DecoratedBox(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: Theme.of(context)
+                            .extension<MyExtension>()!
+                            .normalBorderRadius,
                         color: Theme.of(context).cardColor,
                       ),
                       child: ListView.builder(

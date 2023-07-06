@@ -24,7 +24,7 @@ class ImportantComboBox extends StatelessWidget {
             style: Theme.of(context).textTheme.bodyLarge,
           ),
           DropdownButton<Importance>(
-            iconSize: 0.0,
+            iconSize: 0,
             underline: const SizedBox(),
             value: selectedType,
             items: Importance.values

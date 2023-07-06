@@ -5,6 +5,20 @@ import 'package:yando/model/importance.dart';
 import 'package:yando/model/task.dart';
 import 'package:yando/model/tasks_notifier.dart';
 import 'package:yando/pages/task/widgets/task_widgets.dart';
+import 'package:yando/theme/theme.dart';
+
+extension on List<Widget> {
+  List<Widget> _insertBetweenAll(Widget widget) {
+    final result = List<Widget>.empty(growable: true);
+    for (int i = 0; i < length; i++) {
+      result.add(this[i]);
+      if (i != length - 1 && this[i].runtimeType != Divider) {
+        result.add(widget);
+      }
+    }
+    return result;
+  }
+}
 
 class TaskPage extends StatefulWidget {
   const TaskPage({required this.task, super.key});
@@ -98,13 +112,12 @@ class _TaskPageState extends State<TaskPage> {
           saveTask: saveTask,
         ),
         body: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: Theme.of(context).extension<MyExtension>()!.bigEdgeInsets,
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextFieldTaskPage(textController: _textController),
-                const SizedBox(height: indent),
                 ImportantComboBox(
                   selectedType: _selectedType,
                   task: task,
@@ -114,22 +127,22 @@ class _TaskPageState extends State<TaskPage> {
                     setState(() {});
                   },
                 ),
-                const SizedBox(height: indent),
-                const Divider(color: Colors.grey),
-                const SizedBox(height: indent),
+                Divider(
+                  color: Theme.of(context).extension<MyExtension>()!.grey,
+                ),
                 TimePicker(
                   selectData: selectDateTime,
                   offData: () => _dateTime = null,
                   dateTime: _dateTime,
                 ),
-                const SizedBox(height: indent),
-                const Divider(color: Colors.grey),
-                const SizedBox(height: indent),
+                Divider(
+                  color: Theme.of(context).extension<MyExtension>()!.grey,
+                ),
                 if (widget.task == null)
                   const SizedBox.shrink()
                 else
                   DeleteButton(func: deleteTask),
-              ],
+              ]._insertBetweenAll(const SizedBox(height: indent)),
             ),
           ),
         ),

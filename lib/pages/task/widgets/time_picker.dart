@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:yando/theme/theme.dart';
 
 class TimePicker extends StatefulWidget {
   const TimePicker({
@@ -77,7 +78,9 @@ class _TimePickerState extends State<TimePicker> {
                     selectedDate = await widget.selectData();
                     setState(() {});
                   },
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: Theme.of(context)
+                      .extension<MyExtension>()!
+                      .normalBorderRadius,
                   child: Text(
                     '${selectedDate.day} '
                     '${getMonth(index: selectedDate.month)}'

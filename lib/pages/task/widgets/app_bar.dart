@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:yando/theme/theme.dart';
 
 class AppBarTaskPage extends StatelessWidget implements PreferredSizeWidget {
   const AppBarTaskPage({
@@ -15,12 +16,14 @@ class AppBarTaskPage extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) => AppBar(
         elevation: 0,
         leading: Material(
-          color: Colors.transparent,
+          color: Theme.of(context).extension<MyExtension>()!.transparent,
           child: InkWell(
             onTap: unsaveExit,
-            borderRadius: BorderRadius.circular(8),
+            borderRadius:
+                Theme.of(context).extension<MyExtension>()!.normalBorderRadius,
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding:
+                  Theme.of(context).extension<MyExtension>()!.normalEdgeInsets,
               child: Icon(
                 Icons.clear,
                 color: Theme.of(context).secondaryHeaderColor,
