@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:yando/logger/logger.dart';
 import 'package:yando/model/task.dart';
@@ -32,13 +33,17 @@ class LD {
 
   Future<String> _getId() async {
     final deviceInfo = DeviceInfoPlugin();
-    if (Platform.isIOS) {
-      return (await deviceInfo.iosInfo).identifierForVendor ??
-          'Not found IOS ID';
-    } else if (Platform.isAndroid) {
-      return (await deviceInfo.androidInfo).id;
+    if (kIsWeb) {
+      return 'Not found UNIQ ID is Browser';
     } else {
-      return 'Not found UNIQ ID';
+      if (Platform.isIOS) {
+        return (await deviceInfo.iosInfo).identifierForVendor ??
+            'Not found IOS ID';
+      } else if (Platform.isAndroid) {
+        return (await deviceInfo.androidInfo).id;
+      } else {
+        return 'Not found UNIQ ID';
+      }
     }
   }
 
