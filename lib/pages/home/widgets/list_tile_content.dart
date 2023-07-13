@@ -127,16 +127,20 @@ class _ListTileContentState extends State<ListTileContent> {
                                   : null,
                         ),
                         Expanded(
-                          child: Text(
-                            widget.task.text,
-                            style: widget.task.done
-                                ? TextStyle(
-                                    color: Theme.of(context)
-                                        .extension<MyExtension>()!
-                                        .grey,
-                                    decoration: TextDecoration.lineThrough,
-                                  )
-                                : null,
+                          child: Text.rich(
+                            TextSpan(
+                              text: widget.task.text,
+                              style: widget.task.done
+                                  ? TextStyle(
+                                      color: Theme.of(context)
+                                          .extension<MyExtension>()!
+                                          .grey,
+                                      decoration: TextDecoration.lineThrough,
+                                    )
+                                  : null,
+                            ),
+                            maxLines: 3,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
