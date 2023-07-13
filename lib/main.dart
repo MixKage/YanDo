@@ -51,7 +51,6 @@ class _MyAppState extends State<MyApp> {
           darkTheme: AppTheme.themeDark,
           navigatorKey: _navigatorKey,
           initialRoute: navigationService.initialRoute,
-          debugShowCheckedModeBanner: false,
           routes: navigationService.routes,
           onGenerateRoute: navigationService.onGenerateRoute,
         ),

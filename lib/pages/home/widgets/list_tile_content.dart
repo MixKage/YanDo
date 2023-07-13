@@ -21,6 +21,8 @@ class ListTileContent extends StatefulWidget {
 }
 
 class _ListTileContentState extends State<ListTileContent> {
+  static const normalSize = 20.0;
+
   void pressChecked({required bool value}) {
     widget.task.done = value;
 
@@ -47,7 +49,7 @@ class _ListTileContentState extends State<ListTileContent> {
   Widget build(BuildContext context) => Dismissible(
         background: Container(
           color: Theme.of(context).extension<MyExtension>()!.green,
-          padding: const EdgeInsets.only(left: 16),
+          padding: const EdgeInsets.only(left: normalSize),
           alignment: Alignment.centerLeft,
           child: Icon(
             Icons.done,
@@ -56,8 +58,8 @@ class _ListTileContentState extends State<ListTileContent> {
         ),
         secondaryBackground: Container(
           color: Theme.of(context).extension<MyExtension>()!.error,
-          padding: const EdgeInsets.only(left: 16),
-          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.only(right: normalSize),
+          alignment: Alignment.centerRight,
           child: Icon(
             Icons.delete,
             color: Theme.of(context).scaffoldBackgroundColor,
@@ -89,9 +91,7 @@ class _ListTileContentState extends State<ListTileContent> {
                 activeColor: Theme.of(context).extension<MyExtension>()!.green,
                 value: widget.task.done,
                 onChanged: (value) {
-                  setState(() {
-                    pressChecked(value: value!);
-                  });
+                  pressChecked(value: value!);
                 },
               ),
               Expanded(
@@ -104,7 +104,7 @@ class _ListTileContentState extends State<ListTileContent> {
                           width: widget.task.importance ==
                                       Importance.important.name ||
                                   widget.task.importance == Importance.low.name
-                              ? 20
+                              ? normalSize
                               : 0,
                           child: widget.task.importance ==
                                   Importance.important.name
@@ -116,13 +116,13 @@ class _ListTileContentState extends State<ListTileContent> {
                                         .extension<MyExtension>()!
                                         .error,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 20,
+                                    fontSize: normalSize,
                                   ),
                                 )
                               : widget.task.importance == Importance.low.name
                                   ? const Icon(
                                       Icons.arrow_downward_outlined,
-                                      size: 18,
+                                      size: normalSize,
                                     )
                                   : null,
                         ),
