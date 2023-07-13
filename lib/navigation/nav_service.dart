@@ -68,4 +68,8 @@ class NavigationService {
         transitionsBuilder: (_, Animation<double> a, __, Widget c) =>
             FadeTransition(opacity: a, child: c),
       );
+
+  void pop() {
+    _globalKey.currentState?.pop();
+  }
 }

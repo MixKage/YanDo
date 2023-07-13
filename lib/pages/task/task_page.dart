@@ -4,6 +4,7 @@ import 'package:yando/logger/logger.dart';
 import 'package:yando/model/importance.dart';
 import 'package:yando/model/task.dart';
 import 'package:yando/model/tasks_notifier.dart';
+import 'package:yando/navigation/nav_service.dart';
 import 'package:yando/pages/task/widgets/task_widgets.dart';
 import 'package:yando/theme/theme.dart';
 
@@ -80,11 +81,11 @@ class _TaskPageState extends State<TaskPage> {
     } else {
       tNL.updateTask(task);
     }
-    Navigator.pop(context);
+    NavigationService.instance.pop();
   }
 
   void unsaveExit() {
-    Navigator.of(context).pop();
+    NavigationService.instance.pop();
   }
 
   Future<DateTime> selectDateTime() async {
@@ -102,7 +103,7 @@ class _TaskPageState extends State<TaskPage> {
 
   void deleteTask() {
     tNL.removeTaskById(task.id);
-    Navigator.pop(context);
+    NavigationService.instance.pop();
   }
 
   @override
