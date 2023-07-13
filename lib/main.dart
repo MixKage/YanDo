@@ -1,9 +1,13 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:yando/database/local_data.dart';
+import 'package:yando/firebase_options.dart';
 import 'package:yando/l10n/l10n.dart';
 import 'package:yando/model/tasks_notifier.dart';
 import 'package:yando/navigation/nav_service.dart';
@@ -12,6 +16,16 @@ import 'package:yando/theme/app_theme.dart';
 Future<void> main() async {
   await LD.instance.initAsync();
   await dotenv.load();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  FlutterError.onError = (errorDetails) {
+    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+  };
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
   runApp(const MyApp());
 }
 
