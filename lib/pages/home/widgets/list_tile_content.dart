@@ -27,17 +27,16 @@ class _ListTileContentState extends State<ListTileContent> {
     widget.task.done = value;
 
     if (value) {
-      MyLogger.instance.mes('Checked ${widget.task.id} task');
+      MyLogger.i.mes('Checked ${widget.task.id} task');
     } else {
-      MyLogger.instance.mes('Unchecked ${widget.task.id} task');
+      MyLogger.i.mes('Unchecked ${widget.task.id} task');
     }
     Provider.of<TasksNotifier>(context, listen: false).updateTask(widget.task);
   }
 
   Future<void> editTask() async {
-    MyLogger.instance.mes('Start edit ${widget.task.id} task');
-    await NavigationService.instance
-        .pushNamed(NavigationPaths.task, widget.task);
+    MyLogger.i.mes('Start edit ${widget.task.id} task');
+    await NavigationService.i.pushNamed(NavigationPaths.task, widget.task);
   }
 
   String getDateText(DateTime dateTime) {

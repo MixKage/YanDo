@@ -42,7 +42,7 @@ class _TaskPageState extends State<TaskPage> {
   void initState() {
     _textController = TextEditingController();
     initData();
-    MyLogger.instance.mes(task.toJson().toString());
+    MyLogger.i.mes(task.toJson().toString());
     super.initState();
   }
 
@@ -81,11 +81,11 @@ class _TaskPageState extends State<TaskPage> {
     } else {
       tNL.updateTask(task);
     }
-    NavigationService.instance.pop();
+    NavigationService.i.pop();
   }
 
   void unsaveExit() {
-    NavigationService.instance.pop();
+    NavigationService.i.pop();
   }
 
   Future<DateTime> selectDateTime() async {
@@ -103,7 +103,7 @@ class _TaskPageState extends State<TaskPage> {
 
   void deleteTask() {
     tNL.removeTaskById(task.id);
-    NavigationService.instance.pop();
+    NavigationService.i.pop();
   }
 
   @override

@@ -10,9 +10,9 @@ import 'package:yando/model/task.dart';
 class LD {
   LD._();
 
-  static LD instance = LD._();
+  static LD i = LD._();
 
-  factory LD() => instance;
+  factory LD() => i;
 
   late Box _box;
   late Box _appInfo;
@@ -64,13 +64,13 @@ class LD {
   }
 
   void addTask(TaskModel taskModel) {
-    MyLogger.instance.mes('Create Task'
+    MyLogger.i.mes('Create Task'
         '${taskModel.toJson()}');
     _box.add(taskModel.toJson());
   }
 
   int updateTask(TaskModel taskModel) {
-    MyLogger.instance.mes('Update Task '
+    MyLogger.i.mes('Update Task '
         '${taskModel.id} ${taskModel.toJson()}');
     for (int i = 0; i < length; i++) {
       if (TaskModel.fromJson(_box.getAt(i)).id == taskModel.id) {
@@ -78,12 +78,12 @@ class LD {
         return i;
       }
     }
-    MyLogger.instance.err('Undefined task by id ${taskModel.id}');
+    MyLogger.i.err('Undefined task by id ${taskModel.id}');
     throw Exception('Undefined task by id ${taskModel.id}');
   }
 
   TaskModel getTaskById(int id) {
-    MyLogger.instance.mes('Get Task by id '
+    MyLogger.i.mes('Get Task by id '
         '$id');
 
     for (int i = 0; i < length; i++) {
@@ -91,7 +91,7 @@ class LD {
         return TaskModel.fromJson(_box.getAt(i));
       }
     }
-    MyLogger.instance.err('Undefined task by id $id');
+    MyLogger.i.err('Undefined task by id $id');
     throw Exception('Undefined task by id $id');
 
     // in future rewrite on this style
@@ -107,16 +107,16 @@ class LD {
   }
 
   int removeTaskById(int id) {
-    MyLogger.instance.mes('Removed task by id '
+    MyLogger.i.mes('Removed task by id '
         '$id');
     for (int i = 0; i < length; i++) {
       if (TaskModel.fromJson(_box.getAt(i)).id == id) {
-        MyLogger.instance.mes('Deleted task by id $id');
+        MyLogger.i.mes('Deleted task by id $id');
         _box.deleteAt(i);
         return i;
       }
     }
-    MyLogger.instance.err('Undefined task by id $id');
+    MyLogger.i.err('Undefined task by id $id');
     throw Exception('Undefined task by id $id');
   }
 

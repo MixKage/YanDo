@@ -5,7 +5,7 @@ import 'package:yando/main.dart';
 
 void main() {
   testWidgets('Create quick task', (WidgetTester tester) async {
-    await LD.instance.testInit();
+    await LD.i.testInit();
     await tester.pumpWidget(const MyApp());
 
     await tester.enterText(

@@ -8,6 +8,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:yando/database/local_data.dart';
+import 'package:yando/firebase_config.dart';
 import 'package:yando/firebase_options.dart';
 import 'package:yando/flavor.dart';
 import 'package:yando/l10n/l10n.dart';
@@ -16,7 +17,7 @@ import 'package:yando/navigation/nav_service.dart';
 import 'package:yando/theme/app_theme.dart';
 
 Future<void> main() async {
-  await LD.instance.initAsync();
+  await LD.i.initAsync();
   await dotenv.load();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -28,7 +29,8 @@ Future<void> main() async {
     FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
     return true;
   };
-  FL.instance.flavorConfig;
+  FL.i.flavorConfig;
+  await FRC.i.initFRC(fetchTimeout: 1, minimumFetchInterval: 5);
   runApp(const MyApp());
 }
 

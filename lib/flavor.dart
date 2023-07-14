@@ -5,9 +5,9 @@ import 'package:flutter_flavor/flutter_flavor.dart';
 class FL {
   FL._();
 
-  static FL instance = FL._();
+  static FL i = FL._();
 
-  factory FL() => instance;
+  factory FL() => i;
 
   FlavorConfig get flavorConfig => FlavorConfig(
         name: kReleaseMode ? 'TEST' : 'DEV',

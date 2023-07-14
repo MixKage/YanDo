@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> {
   late TasksNotifier tNL;
 
   Future<void> createNewTask() async {
-    await NavigationService.instance.pushNamed(NavigationPaths.task);
+    await NavigationService.i.pushNamed(NavigationPaths.task);
   }
 
   Future<void> onRefresh() async {

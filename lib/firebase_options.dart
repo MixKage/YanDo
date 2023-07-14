@@ -36,7 +36,6 @@ class DefaultFirebaseOptions {
           'DefaultFirebaseOptions have not been configured for linux - '
           'you can reconfigure this by running the FlutterFire CLI again.',
         );
-      // ignore: no_default_cases
       default:
         throw UnsupportedError(
           'DefaultFirebaseOptions are not supported for this platform.',
@@ -68,8 +67,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '159249535918',
     projectId: 'yandofirebaseapp',
     storageBucket: 'yandofirebaseapp.appspot.com',
-    iosClientId:
-        '159249535918-behe6r2ccg2fnlgqn9uj1aj818pa8bfa.apps.googleusercontent.com',
+    iosClientId: '159249535918-behe6r2ccg2fnlgqn9uj1aj818pa8bfa.apps.googleusercontent.com',
     iosBundleId: 'com.example.yando',
   );
 
@@ -79,8 +77,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '159249535918',
     projectId: 'yandofirebaseapp',
     storageBucket: 'yandofirebaseapp.appspot.com',
-    iosClientId:
-        '159249535918-behe6r2ccg2fnlgqn9uj1aj818pa8bfa.apps.googleusercontent.com',
+    iosClientId: '159249535918-behe6r2ccg2fnlgqn9uj1aj818pa8bfa.apps.googleusercontent.com',
     iosBundleId: 'com.example.yando',
   );
 }

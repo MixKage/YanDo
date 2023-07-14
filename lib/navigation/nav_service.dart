@@ -18,9 +18,9 @@ enum NavigationPaths {
 class NavigationService {
   NavigationService._();
 
-  static NavigationService instance = NavigationService._();
+  static NavigationService i = NavigationService._();
 
-  factory NavigationService() => instance;
+  factory NavigationService() => i;
 
   late final GlobalKey<NavigatorState> _globalKey;
 
@@ -41,7 +41,7 @@ class NavigationService {
     NavigationPaths pathEnum, [
     TaskModel? anything,
   ]) async {
-    MyLogger.instance.mes('Set ${pathEnum.path} page with params: $anything');
+    MyLogger.i.mes('Set ${pathEnum.path} page with params: $anything');
     await _globalKey.currentState?.push(
       PageRouteBuilder(
         settings: RouteSettings(name: pathEnum.path, arguments: anything),

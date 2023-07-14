@@ -4,9 +4,9 @@ class MyLogger {
   MyLogger._();
 
   var logger = Logger();
-  static MyLogger instance = MyLogger._();
+  static MyLogger i = MyLogger._();
 
-  factory MyLogger() => instance;
+  factory MyLogger() => i;
 
   void mes(Object info) {
     logger.d(info.toString());
