@@ -9,8 +9,8 @@ class AppBarTaskPage extends StatelessWidget implements PreferredSizeWidget {
     super.key,
   });
 
-  final void Function() unsaveExit;
-  final void Function() saveTask;
+  final VoidCallback unsaveExit;
+  final VoidCallback saveTask;
 
   @override
   Widget build(BuildContext context) => AppBar(
