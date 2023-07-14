@@ -19,11 +19,11 @@ class FRC {
       ),
     );
     await FirebaseRemoteConfig.instance.setDefaults(const {
-      'error_color': 'none',
+      'error_color': '',
     });
     await FirebaseRemoteConfig.instance.fetchAndActivate();
   }
 
-  String? getErrorColor() =>
+  String getErrorColor() =>
       FirebaseRemoteConfig.instance.getString('error_color');
 }
