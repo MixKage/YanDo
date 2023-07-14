@@ -6,6 +6,7 @@ import 'package:yando/database/local_data.dart';
 import 'package:yando/logger/logger.dart';
 import 'package:yando/model/task.dart';
 
+///InternetService
 class IS {
   IS._();
 
