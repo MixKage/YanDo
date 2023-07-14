@@ -27,37 +27,50 @@
 
 ## Реализовано / отклоненно
 
-✅ Синхронизация и мердж данных с сервером
+✅ Навигация инкапсулирована в отдельной сущности, отсутствуют явные переходы
 
-✅ Offline-first (возможность синхронизировать свой прогресс)
+✅ Текст длинных заметок обрезается по макету
 
-✅ Вынесение констант в Extension темы
+✅ Поддержка ночной темы
 
-✅ Unit тесты
+✅ Реализована поддержка лендскейп-ориентации
 
-✅ Интеграционные тесты
+✅ Реализована работа с Remote Configs, работает рантайм-переключение цвета важности (дефолтный красный по Фигме vs     #793cd8) 
 
-❌ DI - dependency injection
+✅ К проекту подключён и настроен Firebase Crashlytics, репортинг ошибок работает (+1 балл)
 
-❌ Поддержан диплинк
+✅ Поддержаны 2 флейвора
 
-❌ Поддержка Navigator 2 (Router)
+❌ Реализованы анимации
+
+❌ Настроен CI на GitHub
+
+❌ Добавлен инструмент для аналитики
+
+❌ Для дата-моделей используется пакет freezed 
 
 ## Библиотеки
 
 В создании YanDo использовались такие библиотеки как:
 * Provider
+* intl
+* device_info_plus
 * Logger
 * flutter_launcher_icons
 * hive_flutter
 * dio
 * flutter_dotenv
+* firebase_core
+* firebase_crashlytics
+* flutter_flavor
+* firebase_remote_config
+* firebase_analytics
 
 ## Info
 
 Для успешной компиляции и работы проекта потребуется файл .env с данными API_URL и TOKEN
 
-## Скачать последний релиз (V3)
+## Скачать последний релиз (V4)
 
-https://github.com/MixKage/YanDo/releases/tag/yando3version
-https://github.com/MixKage/YanDo/releases/download/yando3version/app-release.apk
+https://github.com/MixKage/YanDo/releases/tag/yando4version
+https://github.com/MixKage/YanDo/releases/download/yando4version/app-release.apk
