@@ -1,17 +1,36 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:yando/database/local_data.dart';
+import 'package:yando/firebase_config.dart';
+import 'package:yando/firebase_options.dart';
+import 'package:yando/flavor.dart';
 import 'package:yando/l10n/l10n.dart';
 import 'package:yando/model/tasks_notifier.dart';
 import 'package:yando/navigation/nav_service.dart';
 import 'package:yando/theme/app_theme.dart';
 
 Future<void> main() async {
-  await LD.instance.initAsync();
+  await LD.i.initAsync();
   await dotenv.load();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  FlutterError.onError = (errorDetails) {
+    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+  };
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
+  FL.i.flavorConfig;
+  await FRC.i.initFRC(fetchTimeout: 1, minimumFetchInterval: 5);
   runApp(const MyApp());
 }
 
@@ -39,21 +58,24 @@ class _MyAppState extends State<MyApp> {
             create: (context) => TasksNotifier.fromHive(),
           )
         ],
-        child: MaterialApp(
-          supportedLocales: Ln10n.all,
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          theme: AppTheme.themeLight,
-          darkTheme: AppTheme.themeDark,
-          navigatorKey: _navigatorKey,
-          initialRoute: navigationService.initialRoute,
-          debugShowCheckedModeBanner: false,
-          routes: navigationService.routes,
-          onGenerateRoute: navigationService.onGenerateRoute,
+        child: FlavorBanner(
+          location: BannerLocation.topEnd,
+          child: MaterialApp(
+            supportedLocales: Ln10n.all,
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            theme: AppTheme.themeLight,
+            debugShowCheckedModeBanner: false,
+            darkTheme: AppTheme.themeDark,
+            navigatorKey: _navigatorKey,
+            initialRoute: navigationService.initialRoute,
+            routes: navigationService.routes,
+            onGenerateRoute: navigationService.onGenerateRoute,
+          ),
         ),
       );
 }

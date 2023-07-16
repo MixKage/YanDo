@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "159249535918",
+    "project_id": "yandofirebaseapp",
+    "storage_bucket": "yandofirebaseapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:159249535918:android:89a3c1a877ccce4a54ee3f",
+        "android_client_info": {
+          "package_name": "com.example.yando"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "159249535918-1aehmmdqrejf89umn88rb7dhjhplkbqv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3IOGW3SACwLAovtuO5aPrH6Y4iIdSBVI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "159249535918-1aehmmdqrejf89umn88rb7dhjhplkbqv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "159249535918-behe6r2ccg2fnlgqn9uj1aj818pa8bfa.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.yando"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

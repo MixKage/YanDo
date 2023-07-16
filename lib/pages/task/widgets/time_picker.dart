@@ -11,7 +11,7 @@ class TimePicker extends StatefulWidget {
   });
 
   final Future<DateTime> Function() selectData;
-  final void Function() offData;
+  final VoidCallback offData;
   final DateTime? dateTime;
 
   @override

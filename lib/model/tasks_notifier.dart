@@ -19,11 +19,11 @@ class TasksNotifier extends ChangeNotifier {
 
   TasksNotifier(this.listTasks);
 
-  factory TasksNotifier.fromHive() => TasksNotifier(LD.instance.getListTasks());
+  factory TasksNotifier.fromHive() => TasksNotifier(LD.i.getListTasks());
 
   Future<void> addTask(TaskModel taskModel) async {
-    LD.instance.addTask(taskModel);
-    await IS.instance.createTask(taskModel);
+    LD.i.addTask(taskModel);
+    await IS.i.createTask(taskModel);
     listTasks.add(taskModel);
     notifyListeners();
   }
@@ -31,32 +31,32 @@ class TasksNotifier extends ChangeNotifier {
   Future<void> updateTask(TaskModel taskModel) async {
     taskModel
       ..changedAt = DateTime.now()
-      ..lastUpdatedBy = LD.instance.idDevice;
+      ..lastUpdatedBy = LD.i.idDevice;
 
-    await IS.instance.updateTaskById(taskModel);
-    final index = LD.instance.updateTask(taskModel);
+    await IS.i.updateTaskById(taskModel);
+    final index = LD.i.updateTask(taskModel);
     listTasks[index] = taskModel;
     notifyListeners();
   }
 
   Future<void> removeTaskById(int id) async {
-    final index = LD.instance.removeTaskById(id);
+    final index = LD.i.removeTaskById(id);
     listTasks.removeAt(index);
-    await IS.instance.deleteById(id);
+    await IS.i.deleteById(id);
     notifyListeners();
   }
 
   Future<void> getFromServer() async {
-    //final tasks = await IS.instance.getAll();
+    //final tasks = await IS.i.getAll();
 
-    listTasks = await IS.instance.updateAll(LD.instance.getListTasks()) ?? [];
+    listTasks = await IS.i.updateAll(LD.i.getListTasks()) ?? [];
 
     // if (taskModels != null) {
     //   listTasks = List.from(taskModels);
     // }
-    // await LD.instance.deleteAll();
+    // await LD.i.deleteAll();
     // for (int i = 0; i < listTasks.length; i++) {
-    //   LD.instance.addTask(listTasks[i]);
+    //   LD.i.addTask(listTasks[i]);
     // }
     notifyListeners();
   }
@@ -66,12 +66,12 @@ class TasksNotifier extends ChangeNotifier {
   // изменения. Таски созданные на другом устройстве
   // не будут удалены.
   Future<void> syncList() async {
-    final sList = await IS.instance.getAll();
-    final lList = LD.instance.getListTasks();
+    final sList = await IS.i.getAll();
+    final lList = LD.i.getListTasks();
     final List<TaskModel> result = [];
 
     if (sList == null) {
-      await IS.instance.updateAll(listTasks);
+      await IS.i.updateAll(listTasks);
       listTasks = List.from(lList);
       notifyListeners();
       return;
@@ -95,13 +95,13 @@ class TasksNotifier extends ChangeNotifier {
       lList.add(result[i]);
     }
 
-    final syncList = await IS.instance.updateAll(lList);
+    final syncList = await IS.i.updateAll(lList);
     listTasks = syncList == null ? [] : List.from(syncList);
     notifyListeners();
   }
 
   void deleteAll() {
     listTasks.clear();
-    LD.instance.deleteAll();
+    LD.i.deleteAll();
   }
 }

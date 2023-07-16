@@ -25,7 +25,7 @@ class TaskModel {
   });
 
   TaskModel.defaultTask()
-      : id = LD.instance.newId,
+      : id = LD.i.newId,
         text = '',
         importance = Importance.basic.name,
         deadline = null,
@@ -33,17 +33,17 @@ class TaskModel {
         color = null,
         createdAt = DateTime.now(),
         changedAt = DateTime.now(),
-        lastUpdatedBy = LD.instance.idDevice;
+        lastUpdatedBy = LD.i.idDevice;
 
   TaskModel.defaultWithTextTask(this.text)
-      : id = LD.instance.newId,
+      : id = LD.i.newId,
         importance = Importance.basic.name,
         deadline = null,
         done = false,
         color = null,
         createdAt = DateTime.now(),
         changedAt = DateTime.now(),
-        lastUpdatedBy = LD.instance.idDevice;
+        lastUpdatedBy = LD.i.idDevice;
 
   TaskModel.fromJson(Map<dynamic, dynamic> json)
       : id = json['id'],

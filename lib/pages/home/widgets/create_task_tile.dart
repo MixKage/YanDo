@@ -14,7 +14,7 @@ class CreateTaskTile extends StatefulWidget {
 
 class _CreateTaskTileState extends State<CreateTaskTile> {
   Future<void> createTask(String text) async {
-    MyLogger.instance.mes('Create Task $text');
+    MyLogger.i.mes('Create Task $text');
     final newTask = TaskModel.defaultWithTextTask(text);
     await Provider.of<TasksNotifier>(context, listen: false).addTask(newTask);
   }
@@ -29,7 +29,7 @@ class _CreateTaskTileState extends State<CreateTaskTile> {
           ),
           onSubmitted: (value) {
             if (value.trim().isNotEmpty) createTask(value);
-            MyLogger.instance.mes('Create defaultWithTextTask');
+            MyLogger.i.mes('Create defaultWithTextTask');
           },
         ),
       );

@@ -5,7 +5,7 @@ import 'package:yando/theme/theme.dart';
 class DeleteButton extends StatelessWidget {
   const DeleteButton({required this.func, super.key});
 
-  final void Function() func;
+  final VoidCallback func;
 
   @override
   Widget build(BuildContext context) => InkWell(
